@@ -24,19 +24,23 @@
         /* ===== OKLCH COLOR VARIABLES (exact from source) ===== */
         :root {
             --primary: oklch(56% .14 152);
+            --primary-10: oklab(0.56 -0.123613 0.065726 / 0.10);
             --primary-85: oklab(0.56 -0.123613 0.065726 / 0.85);
             --secondary: oklch(96% .02 150);
             --background: oklch(99.5% .003 145);
             --card: oklch(100% 0 0);
             --border: oklch(91% .012 150);
+            --foreground: oklch(22% .02 150);
+            --foreground-40: oklab(0.22 -0.0173205 0.01 / 0.4);
             --text-primary: oklch(22% .02 150);
             --text-secondary: oklch(50% .02 152);
             --text-muted: oklch(50% .02 152);
-            --foreground: oklch(22% .02 150);
             --radius: 16px;
             --radius-sm: 10px;
+            --radius-xl: 12px;
             --transition: 0.25s cubic-bezier(0.16, 1, 0.32, 1);
             --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
         html {
@@ -52,6 +56,7 @@
             display: flex;
             flex-direction: column;
             margin: 0;
+            overflow: hidden; /* Prevent scroll when modal is open */
         }
 
         a {
@@ -403,6 +408,147 @@
             color: var(--primary);
         }
 
+        /* ===== LANGUAGE SELECTION MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--foreground-40);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-card {
+            max-width: 384px;
+            width: 100%;
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-10);
+            margin: 0 auto 16px;
+        }
+
+        .modal-icon-container svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary);
+        }
+
+        .modal-title {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .modal-subtitle {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+        }
+
+        .modal-btn-primary:hover {
+            background: oklch(50% .14 152);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .modal-btn-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-xl);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition), border-color var(--transition), transform var(--transition);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--primary-10);
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .modal-btn-secondary:active {
+            transform: scale(0.98);
+        }
+
         /* ===== LOVABLE BADGE ===== */
         #lovable-badge {
             --badge-bg: #1b1b1b;
@@ -584,6 +730,10 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                overflow: auto;
+            }
+
             .hero h1 {
                 font-size: 2.25rem;
             }
@@ -650,6 +800,11 @@
             .container {
                 padding: 0 16px;
             }
+
+            .modal-card {
+                padding: 24px;
+                margin: 16px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -665,10 +820,42 @@
             .feature-card .card-image {
                 height: 140px;
             }
+
+            .modal-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== LANGUAGE SELECTION MODAL ===== -->
+    <div class="modal-overlay" id="languageModal">
+        <div class="modal-card">
+            <!-- Icon -->
+            <div class="modal-icon-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                    <path d="M2 12h20" />
+                </svg>
+            </div>
+
+            <!-- Title & Subtitle -->
+            <h2 class="modal-title">Choose your language</h2>
+            <p class="modal-subtitle">Dooro luqaddaada</p>
+
+            <!-- Buttons -->
+            <div class="modal-actions">
+                <button class="modal-btn-primary" data-lang="en" id="selectEnglish">
+                    English
+                </button>
+                <button class="modal-btn-secondary" data-lang="so" id="selectSomali">
+                    Somali
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ===== HEADER ===== -->
     <header class="header">
@@ -813,7 +1000,52 @@
 
     <!-- ===== SCRIPTS ===== -->
     <script>
-        // Don't show the lovable-badge if the page is in an iframe or if it's being rendered by puppeteer
+        // ===== LANGUAGE SELECTION MODAL =====
+        const modal = document.getElementById('languageModal');
+        const selectEnglish = document.getElementById('selectEnglish');
+        const selectSomali = document.getElementById('selectSomali');
+
+        // Check if language was previously selected
+        const savedLanguage = localStorage.getItem('waafi-language');
+
+        if (savedLanguage) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            updateLanguageUI(savedLanguage);
+        }
+
+        function updateLanguageUI(lang) {
+            const langText = lang === 'en' ? 'EN' : 'SO';
+            const toggle = document.getElementById('langToggle');
+            toggle.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                    <path d="M2 12h20" />
+                </svg>
+                ${langText}
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            `;
+            
+            // Update dropdown active state
+            document.querySelectorAll('.lang-dropdown-menu button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        function selectLanguage(lang) {
+            localStorage.setItem('waafi-language', lang);
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            updateLanguageUI(lang);
+        }
+
+        selectEnglish.addEventListener('click', () => selectLanguage('en'));
+        selectSomali.addEventListener('click', () => selectLanguage('so'));
+
+        // ===== Don't show the lovable-badge if the page is in an iframe =====
         if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
             var badge = document.getElementById('lovable-badge');
             if (badge) {
@@ -821,7 +1053,7 @@
             }
         }
 
-        // Mobile Menu Toggle
+        // ===== Mobile Menu Toggle =====
         const menuToggle = document.getElementById('menuToggle');
         const mainNav = document.getElementById('mainNav');
 
@@ -844,7 +1076,7 @@
             });
         });
 
-        // Language Dropdown Toggle
+        // ===== Language Dropdown Toggle =====
         const langToggle = document.getElementById('langToggle');
         const langMenu = document.getElementById('langMenu');
 
@@ -858,29 +1090,19 @@
             langMenu.classList.remove('open');
         });
 
-        // Language selection
+        // Language selection from dropdown
         document.querySelectorAll('.lang-dropdown-menu button').forEach(btn => {
             btn.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                localStorage.setItem('waafi-language', lang);
                 document.querySelectorAll('.lang-dropdown-menu button').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                const lang = this.dataset.lang;
-                const langText = lang === 'en' ? 'EN' : 'SO';
-                langToggle.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                        <path d="M2 12h20" />
-                    </svg>
-                    ${langText}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m6 9 6 6 6-6" />
-                    </svg>
-                `;
+                updateLanguageUI(lang);
                 langMenu.classList.remove('open');
             });
         });
 
-        // Lovable Badge Close
+        // ===== Lovable Badge Close =====
         const closeBtn = document.getElementById('lovable-badge-close');
         if (closeBtn) {
             closeBtn.addEventListener('click', function(event) {
