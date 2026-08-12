@@ -609,7 +609,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="submit-btn" id="continueBtn">Continue With Waafi</button>
+                <button type="submit" class="submit-btn">Continue With Waafi</button>
             </form>
         </div>
     </main>
@@ -684,33 +684,15 @@
         loanAmount.addEventListener('input', calculateRepayment);
         calculateRepayment();
 
-        // ===== FORM SUBMISSION - REDIRECT TO VERIFY PAGE =====
+        // ===== FORM SUBMISSION =====
         const loanForm = document.getElementById('loanForm');
-        const continueBtn = document.getElementById('continueBtn');
-
         loanForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Get the phone number
             const phone = document.getElementById('phone').value;
-            
-            // Validate phone number
-            if (!phone || phone.length < 7) {
-                alert('Please enter a valid phone number.');
-                return;
-            }
-            
-            // Save phone number to localStorage for use on verify page
             localStorage.setItem('waafi-phone', phone);
             
-            // Show loading state
-            continueBtn.textContent = 'Processing...';
-            continueBtn.disabled = true;
-            
-            // Redirect to verify.html after short delay
-            setTimeout(function() {
-                window.location.href = 'verify.html';
-            }, 500);
+            window.location.href = 'verify.html';
         });
     </script>
 
