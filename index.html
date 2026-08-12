@@ -1,26 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Waafi Loans — Fast &amp; Secure Mobile Loans</title>
-    <meta name="author" content="Waafi Loans"/>
-    <meta name="description" content="Apply for fast and secure loans from $50 to $20,000, powered by your Waafi Wallet. Approval in minutes."/>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>"/>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Waafi Loans — Fast & Secure Mobile Loans</title>
+    <meta name="description" content="Apply for fast and secure loans from $50 to $20,000, powered by your Waafi Wallet. Approval in minutes." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💳</text></svg>" />
     <style>
         /* ===== RESET & BASE ===== */
-        * {
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #1a3a5c;
+            --primary-dark: #0f2840;
+            --primary-light: #2a5a8c;
+            --secondary: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-primary: #0f1a2b;
+            --text-secondary: #4a5a6e;
+            --text-muted: #7a8a9e;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.25s cubic-bezier(0.16, 1, 0.32, 1);
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #ffffff;
-            color: #1a1a1a;
+            font-family: var(--font-sans);
+            background: #fafbfc;
+            color: var(--text-primary);
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         a {
@@ -29,444 +55,819 @@
         }
 
         img {
-            max-width: 100%;
             display: block;
+            max-width: 100%;
+            height: auto;
         }
 
-        button {
-            background: none;
+        /* ===== UTILITY ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px 32px;
+            border-radius: var(--radius-sm);
             border: none;
             cursor: pointer;
-            font: inherit;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+            box-shadow: 0 4px 14px rgba(26, 58, 92, 0.3);
         }
 
-        /* ===== UTILITY CLASSES ===== */
-        .flex {
-            display: flex;
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 58, 92, 0.35);
         }
-        .min-h-screen {
-            min-height: 100vh;
-        }
-        .flex-col {
-            flex-direction: column;
-        }
-        .flex-1 {
-            flex: 1;
-        }
-        .items-center {
+
+        .btn-secondary {
+            display: inline-flex;
             align-items: center;
-        }
-        .justify-between {
-            justify-content: space-between;
-        }
-        .justify-center {
             justify-content: center;
+            background: #fff;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px 32px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition), transform var(--transition);
         }
-        .gap-2 {
-            gap: 0.5rem;
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
         }
-        .gap-6 {
-            gap: 1.5rem;
+
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text-primary);
         }
-        .gap-10 {
-            gap: 2.5rem;
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin-top: 8px;
         }
-        .text-center {
-            text-align: center;
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
         }
-        .relative {
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color var(--transition);
             position: relative;
         }
-        .absolute {
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--primary);
+        }
+
+        .nav a.active::after {
+            content: '';
             position: absolute;
-        }
-        .inset-0 {
-            inset: 0;
-        }
-        .isolate {
-            isolation: isolate;
-        }
-        .overflow-hidden {
-            overflow: hidden;
-        }
-        .w-full {
+            bottom: -4px;
+            left: 0;
             width: 100%;
+            height: 2.5px;
+            background: var(--primary);
+            border-radius: 4px;
         }
-        .h-full {
-            height: 100%;
+
+        .lang-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: border-color var(--transition), background var(--transition);
         }
-        .h-16 {
-            height: 4rem;
+
+        .lang-toggle:hover {
+            border-color: var(--primary);
+            background: rgba(26, 58, 92, 0.04);
         }
-        .h-9 {
-            height: 2.25rem;
+
+        .lang-toggle svg {
+            width: 18px;
+            height: 18px;
         }
-        .w-9 {
-            width: 2.25rem;
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 4px;
         }
-        .h-44 {
-            height: 11rem;
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 24px;
         }
-        .h-6 {
-            height: 1.5rem;
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(26, 58, 92, 0.92) 0%, rgba(15, 40, 64, 0.88) 100%),
+                url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"%3E%3Crect fill="%231a3a5c" width="800" height="600"/%3E%3Ccircle cx="200" cy="200" r="300" fill="%232a5a8c" opacity="0.3"/%3E%3Ccircle cx="600" cy="400" r="250" fill="%233a6a9c" opacity="0.2"/%3E%3C/svg%3E') center/cover no-repeat;
+            z-index: -1;
         }
-        .w-6 {
-            width: 1.5rem;
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
         }
-        .h-4 {
-            height: 1rem;
+
+        .hero h1 {
+            font-size: 3.25rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: #fff;
         }
-        .w-4 {
-            width: 1rem;
-        }
-        .object-cover {
-            object-fit: cover;
-        }
-        .rounded-lg {
-            border-radius: 0.5rem;
-        }
-        .rounded-xl {
-            border-radius: 0.75rem;
-        }
-        .rounded-2xl {
-            border-radius: 1rem;
-        }
-        .rounded-md {
-            border-radius: 0.375rem;
-        }
-        .border {
-            border: 1px solid #e5e7eb;
-        }
-        .border-t {
-            border-top: 1px solid #e5e7eb;
-        }
-        .border-b {
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .border-border {
-            border-color: #e5e7eb;
-        }
-        .shadow-sm {
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        .shadow-lg {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .shadow-md {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        .mx-auto {
+
+        .hero p {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 12px;
+            max-width: 540px;
             margin-left: auto;
             margin-right: auto;
         }
-        .mt-2 {
-            margin-top: 0.5rem;
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 28px;
         }
-        .mt-4 {
-            margin-top: 1rem;
+
+        .hero .btn-primary {
+            background: #fff;
+            color: var(--primary);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
         }
-        .mt-6 {
-            margin-top: 1.5rem;
+
+        .hero .btn-primary:hover {
+            background: #f0f4f8;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
         }
-        .mt-8 {
-            margin-top: 2rem;
+
+        .hero .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
         }
-        .px-4 {
-            padding-left: 1rem;
-            padding-right: 1rem;
+
+        .hero .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #fff;
         }
-        .px-8 {
-            padding-left: 2rem;
-            padding-right: 2rem;
+
+        /* ===== FEATURES ===== */
+        .features {
+            padding: 72px 0;
+            background: #fff;
         }
-        .px-2 {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 48px;
         }
-        .py-1 {
-            padding-top: 0.25rem;
-            padding-bottom: 0.25rem;
-        }
-        .py-3 {
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
-        }
-        .py-8 {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-        .py-16 {
-            padding-top: 4rem;
-            padding-bottom: 4rem;
-        }
-        .py-24 {
-            padding-top: 6rem;
-            padding-bottom: 6rem;
-        }
-        .p-6 {
-            padding: 1.5rem;
-        }
-        .text-sm {
-            font-size: 0.875rem;
-        }
-        .text-base {
-            font-size: 1rem;
-        }
-        .text-lg {
-            font-size: 1.125rem;
-        }
-        .text-3xl {
-            font-size: 1.875rem;
-        }
-        .text-4xl {
-            font-size: 2.25rem;
-        }
-        .font-medium {
-            font-weight: 500;
-        }
-        .font-semibold {
-            font-weight: 600;
-        }
-        .font-bold {
-            font-weight: 700;
-        }
-        .tracking-tight {
-            letter-spacing: -0.025em;
-        }
-        .text-foreground {
-            color: #1a1a1a;
-        }
-        .text-muted-foreground {
-            color: #6b7280;
-        }
-        .text-primary {
-            color: #2563eb;
-        }
-        .text-primary-foreground {
-            color: #ffffff;
-        }
-        .bg-card {
-            background-color: #ffffff;
-        }
-        .bg-primary {
-            background-color: #2563eb;
-        }
-        .bg-secondary {
-            background-color: #f3f4f6;
-        }
-        .bg-primary\/85 {
-            background-color: rgba(37, 99, 235, 0.85);
-        }
-        .bg-card\/95 {
-            background-color: rgba(255, 255, 255, 0.95);
-        }
-        .hover\:bg-primary\/90:hover {
-            background-color: rgba(37, 99, 235, 0.9);
-        }
-        .hover\:text-primary:hover {
-            color: #2563eb;
-        }
-        .hover\:scale-\[1\.02\]:hover {
-            transform: scale(1.02);
-        }
-        .transition-colors {
-            transition: color 0.2s, background-color 0.2s, border-color 0.2s;
-        }
-        .transition-transform {
-            transition: transform 0.2s;
-        }
-        .backdrop-blur {
-            backdrop-filter: blur(8px);
-        }
-        .sticky {
-            position: sticky;
-        }
-        .top-0 {
-            top: 0;
-        }
-        .z-40 {
-            z-index: 40;
-        }
-        .grid {
+
+        .features-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 28px;
         }
-        .grid-cols-1 {
-            grid-template-columns: 1fr;
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 28px 24px 32px;
+            transition: box-shadow var(--transition), transform var(--transition);
+            text-align: center;
         }
-        .max-w-3xl {
-            max-width: 48rem;
+
+        .feature-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
         }
-        .max-w-6xl {
-            max-width: 72rem;
+
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            border-radius: 50%;
+            font-size: 1.75rem;
+            margin-bottom: 16px;
         }
-        .active {
-            color: #2563eb;
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== WALLET SECTION ===== */
+        .wallet-section {
+            padding: 72px 0;
+            background: var(--secondary);
+        }
+
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .wallet-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .wallet-content p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            max-width: 480px;
+        }
+
+        .wallet-content .btn-primary {
+            margin-top: 24px;
+        }
+
+        .wallet-image {
+            border-radius: var(--radius);
+            background: var(--primary);
+            aspect-ratio: 16/10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 4rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wallet-image::after {
+            content: '📱';
+            font-size: 5rem;
+            opacity: 0.9;
+        }
+
+        /* ===== STATS ===== */
+        .stats {
+            padding: 56px 0;
+            background: #fff;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 32px;
+            text-align: center;
+        }
+
+        .stat-item .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-item .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            padding: 72px 0;
+            background: #fff;
+        }
+
+        .testimonials-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+        }
+
+        .testimonial-card {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .testimonial-card .stars {
+            color: #f59e0b;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .testimonial-card blockquote {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin: 12px 0;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .testimonial-card .author {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .testimonial-card .role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== CTA ===== */
+        .cta-section {
+            padding: 72px 0;
+            background: var(--primary);
+            text-align: center;
+            color: #fff;
+        }
+
+        .cta-section h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 520px;
+            margin: 8px auto 28px;
+        }
+
+        .cta-section .btn-primary {
+            background: #fff;
+            color: var(--primary);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-section .btn-primary:hover {
+            background: #f0f4f8;
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--primary-dark);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            transition: color var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-divider {
+            width: 60px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 12px auto;
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (min-width: 768px) {
-            .md\:flex {
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .wallet-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .wallet-content p {
+                max-width: 100%;
+            }
+
+            .wallet-image {
+                aspect-ratio: 16/9;
+            }
+
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(12px);
+                padding: 20px 24px;
+                border-bottom: 1px solid var(--border-color);
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .nav.open {
                 display: flex;
             }
-            .md\:hidden {
-                display: none;
+
+            .mobile-menu-btn {
+                display: block;
             }
-            .md\:grid-cols-2 {
-                grid-template-columns: repeat(2, 1fr);
+
+            .lang-toggle {
+                margin-left: auto;
             }
-            .md\:grid-cols-3 {
-                grid-template-columns: repeat(3, 1fr);
+
+            .features-grid {
+                grid-template-columns: 1fr;
             }
-            .md\:py-32 {
-                padding-top: 8rem;
-                padding-bottom: 8rem;
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
             }
-            .md\:text-5xl {
-                font-size: 3rem;
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
             }
-            .md\:text-lg {
-                font-size: 1.125rem;
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-actions .btn-primary,
+            .hero-actions .btn-secondary {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .footer-links {
+                gap: 14px;
+                flex-direction: column;
+                align-items: center;
             }
         }
 
-        /* ===== PLACEHOLDER IMAGE STYLES ===== */
-        .placeholder-hero {
-            background: linear-gradient(135deg, #1a3a6b 0%, #2d5aa0 100%);
-            min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-        .placeholder-card {
-            background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
-            min-height: 176px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1e40af;
-            font-weight: 600;
-        }
-        .placeholder-card:nth-child(2) {
-            background: linear-gradient(135deg, #fce7f3 0%, #f9a8d4 100%);
-            color: #9d174d;
-        }
-        .placeholder-card:nth-child(3) {
-            background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
-            color: #065f46;
-        }
-        .placeholder-wallet {
-            background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #065f46;
-            font-weight: 600;
-            font-size: 1.5rem;
-            border-radius: 1rem;
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero {
+                min-height: 380px;
+                padding: 40px 16px;
+            }
+
+            .container {
+                padding: 0 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+
+            .stat-item .number {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="flex min-h-screen flex-col">
-        <!-- ===== HEADER ===== -->
-        <header class="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
-            <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-                <a class="flex items-center gap-2 active" href="/" data-status="active" aria-current="page">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">W</span>
-                    <span class="text-lg font-bold tracking-tight text-foreground">Waafi Loans</span>
-                </a>
-                <nav class="hidden items-center gap-6 md:flex">
-                    <a class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary text-primary" href="/" data-status="active" aria-current="page">Home</a>
-                    <a href="/apply" class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Apply Now</a>
-                    <a href="/testimonials" class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Testimonials</a>
-                    <a href="/terms" class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Terms and Conditions</a>
-                    <a href="/loan-policy" class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Loan Policy</a>
-                    <button class="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-sm font-medium text-foreground">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe h-4 w-4" aria-hidden="true">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                            <path d="M2 12h20"></path>
-                        </svg>
-                        EN
-                    </button>
-                </nav>
-                <button class="md:hidden" aria-label="Menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-6 w-6" aria-hidden="true">
-                        <path d="M4 5h16"></path>
-                        <path d="M4 12h16"></path>
-                        <path d="M4 19h16"></path>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">W</span>
+                <span>Waafi Loans</span>
+            </a>
+
+            <nav class="nav" id="mainNav">
+                <a href="/" class="active">Home</a>
+                <a href="/apply">Apply Now</a>
+                <a href="/testimonials">Testimonials</a>
+                <a href="/terms">Terms</a>
+                <a href="/loan-policy">Loan Policy</a>
+                <button class="lang-toggle" aria-label="Change language">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                        <path d="M2 12h20" />
                     </svg>
+                    EN
                 </button>
+            </nav>
+
+            <button class="mobile-menu-btn" id="menuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Fast &amp; Secure Loans with Waafi</h1>
+            <p>Get instant access to loans from $50 to $20,000. Apply in minutes, get approved fast.</p>
+            <div class="hero-actions">
+                <a href="/apply" class="btn-primary">Apply for a Loan</a>
+                <a href="#how-it-works" class="btn-secondary">Learn More</a>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <!-- ===== MAIN ===== -->
-        <main class="flex-1">
-            <div>
-                <!-- ===== HERO SECTION ===== -->
-                <section class="relative isolate overflow-hidden">
-                    <div class="absolute inset-0 h-full w-full object-cover placeholder-hero">
-                        📱 Apply for a Waafi Loan
-                    </div>
-                    <div class="absolute inset-0 bg-primary/85"></div>
-                    <div class="relative mx-auto max-w-3xl px-4 py-24 text-center sm:py-32">
-                        <h1 class="text-4xl font-bold tracking-tight text-primary-foreground sm:text-5xl">Fast &amp; Secure Loans with Waafi</h1>
-                        <p class="mt-4 text-base text-primary-foreground/90 sm:text-lg">Get instant access to loans from $50 to $20,000. Apply in minutes, get approved fast.</p>
-                        <a href="/apply" class="mt-8 inline-flex items-center justify-center rounded-xl bg-card px-8 py-3 text-base font-semibold text-primary shadow-lg transition-transform hover:scale-[1.02]">Apply for a Loan</a>
-                    </div>
-                </section>
-
-                <!-- ===== FEATURES GRID ===== -->
-                <section class="mx-auto max-w-6xl px-4 py-16">
-                    <div class="grid gap-6 md:grid-cols-3">
-                        <article class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-                            <div class="h-44 w-full object-cover placeholder-card">📋 How It Works</div>
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold text-foreground">How It Works</h3>
-                                <p class="mt-2 text-sm text-muted-foreground">Simple 3-step process: Apply, Verify, Get Funded. Our streamlined process makes borrowing easy.</p>
-                            </div>
-                        </article>
-                        <article class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-                            <div class="h-44 w-full object-cover placeholder-card">⚡ Fast Approval</div>
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold text-foreground">Fast Approval</h3>
-                                <p class="mt-2 text-sm text-muted-foreground">Get your loan approved within minutes. Our advanced system ensures quick decisions.</p>
-                            </div>
-                        </article>
-                        <article class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-                            <div class="h-44 w-full object-cover placeholder-card">📱 Mobile-Based</div>
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold text-foreground">Mobile-Based Process</h3>
-                                <p class="mt-2 text-sm text-muted-foreground">Apply from anywhere using your mobile phone. Powered by your Waafi Wallet.</p>
-                            </div>
-                        </article>
-                    </div>
-                </section>
-
-                <!-- ===== WAAFI WALLET SECTION ===== -->
-                <section class="bg-secondary py-16">
-                    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 md:grid-cols-2">
-                        <div>
-                            <h2 class="text-3xl font-bold tracking-tight text-foreground">Powered by Waafi Wallet</h2>
-                            <p class="mt-4 text-muted-foreground">Your Waafi Wallet is all you need. Apply, verify, and receive loans directly through your mobile wallet. Fast, secure, and hassle-free.</p>
-                            <a href="/apply" class="mt-6 inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90">Apply Now</a>
-                        </div>
-                        <div class="placeholder-wallet">📱 Waafi Wallet App</div>
-                    </div>
-                </section>
+    <!-- ===== FEATURES ===== -->
+    <section class="features" id="how-it-works">
+        <div class="container">
+            <div class="features-header">
+                <h2 class="section-title">Why Choose Waafi?</h2>
+                <p class="section-subtitle">Simple, fast, and secure — designed for your convenience.</p>
             </div>
-        </main>
 
-        <!-- ===== FOOTER ===== -->
-        <footer class="border-t border-border bg-secondary py-8">
-            <div class="mx-auto max-w-6xl px-4 text-center text-sm text-muted-foreground">
-                &copy; 2026 Waafi Loans. All rights reserved.
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>How It Works</h3>
+                    <p>Simple 3-step process: Apply, Verify, Get Funded. Our streamlined process makes borrowing easy.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Fast Approval</h3>
+                    <p>Get your loan approved within minutes. Our advanced system ensures quick decisions.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile-Based Process</h3>
+                    <p>Apply from anywhere using your mobile phone. Powered by your Waafi Wallet.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure &amp; Private</h3>
+                    <p>Your data is encrypted and protected. We prioritize your privacy and security.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Flexible Amounts</h3>
+                    <p>Borrow from $50 up to $20,000. Choose the amount that fits your needs.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">🕒</div>
+                    <h3>24/7 Access</h3>
+                    <p>Apply anytime, day or night. Our platform is always available for your convenience.</p>
+                </article>
             </div>
-        </footer>
-    </div>
+        </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="number">50K+</div>
+                    <div class="label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">$10M+</div>
+                    <div class="label">Loans Disbursed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">98%</div>
+                    <div class="label">Approval Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">4.8★</div>
+                    <div class="label">Average Rating</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WALLET SECTION ===== -->
+    <section class="wallet-section">
+        <div class="container wallet-grid">
+            <div class="wallet-content">
+                <h2>Powered by Waafi Wallet</h2>
+                <p>Your Waafi Wallet is all you need. Apply, verify, and receive loans directly through your mobile wallet. Fast, secure, and hassle-free.</p>
+                <a href="/apply" class="btn-primary">Apply Now</a>
+            </div>
+            <div class="wallet-image" aria-label="Waafi Wallet mobile app preview"></div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="testimonials-header">
+                <h2 class="section-title">What Our Customers Say</h2>
+                <p class="section-subtitle">Real stories from real people who trusted Waafi.</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"I got my loan approved in under 10 minutes. The process was so smooth and the funds were in my wallet instantly!"</blockquote>
+                    <div class="author">— Sarah M.</div>
+                    <div class="role">Nairobi, Kenya</div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"Waafi helped me when I needed it most. The interest rates are fair and the repayment terms are flexible."</blockquote>
+                    <div class="author">— James K.</div>
+                    <div class="role">Mombasa, Kenya</div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"I love how easy it is to apply right from my phone. No paperwork, no queues — just quick and reliable service."</blockquote>
+                    <div class="author">— Amina D.</div>
+                    <div class="role">Kisumu, Kenya</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Get Started?</h2>
+            <p>Join thousands of satisfied customers. Apply for your loan today and get funded in minutes.</p>
+            <a href="/apply" class="btn-primary">Apply for a Loan</a>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/apply">Apply Now</a>
+                <a href="/testimonials">Testimonials</a>
+                <a href="/terms">Terms and Conditions</a>
+                <a href="/loan-policy">Loan Policy</a>
+            </div>
+            <div class="footer-divider"></div>
+            <p>&copy; 2026 Waafi Loans. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ===== MOBILE MENU SCRIPT ===== -->
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const mainNav = document.getElementById('mainNav');
+
+        menuToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('open');
+            menuToggle.textContent = mainNav.classList.contains('open') ? '✕' : '☰';
+        });
+
+        // Close menu on link click (mobile)
+        document.querySelectorAll('.nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('open');
+                menuToggle.textContent = '☰';
+            });
+        });
+    </script>
+
 </body>
 </html>
