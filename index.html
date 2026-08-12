@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Waafi Loans — Fast & Secure Mobile Loans</title>
+    <title>Waafi Loans — Fast &amp; Secure Mobile Loans</title>
     <meta name="description" content="Apply for fast and secure loans from $50 to $20,000, powered by your Waafi Wallet. Approval in minutes." />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💳</text></svg>" />
+    <meta name="author" content="Waafi Loans" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>W</text></svg>" />
     <style>
         /* ===== RESET & BASE ===== */
         *,
@@ -20,6 +21,7 @@
             --primary: #1a3a5c;
             --primary-dark: #0f2840;
             --primary-light: #2a5a8c;
+            --primary-85: rgba(26, 58, 92, 0.85);
             --secondary: #f0f4f8;
             --card-bg: #ffffff;
             --text-primary: #0f1a2b;
@@ -47,6 +49,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            margin: 0;
         }
 
         a {
@@ -85,7 +88,7 @@
 
         .btn-primary:hover {
             background: var(--primary-dark);
-            transform: translateY(-2px);
+            transform: scale(1.02);
             box-shadow: 0 8px 24px rgba(26, 58, 92, 0.35);
         }
 
@@ -107,7 +110,7 @@
         .btn-secondary:hover {
             background: var(--primary);
             color: #fff;
-            transform: translateY(-2px);
+            transform: scale(1.02);
         }
 
         .section-title {
@@ -130,7 +133,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
         }
@@ -234,21 +237,30 @@
             position: relative;
             isolation: isolate;
             overflow: hidden;
-            min-height: 480px;
+            min-height: 500px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 60px 24px;
+            padding: 80px 24px;
         }
 
         .hero-bg {
             position: absolute;
             inset: 0;
-            background:
-                linear-gradient(135deg, rgba(26, 58, 92, 0.92) 0%, rgba(15, 40, 64, 0.88) 100%),
+            background: 
+                linear-gradient(135deg, var(--primary-85) 0%, rgba(15, 40, 64, 0.9) 100%),
                 url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"%3E%3Crect fill="%231a3a5c" width="800" height="600"/%3E%3Ccircle cx="200" cy="200" r="300" fill="%232a5a8c" opacity="0.3"/%3E%3Ccircle cx="600" cy="400" r="250" fill="%233a6a9c" opacity="0.2"/%3E%3C/svg%3E') center/cover no-repeat;
             z-index: -1;
+        }
+
+        .hero-bg img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
         }
 
         .hero-content {
@@ -267,111 +279,85 @@
 
         .hero p {
             font-size: 1.125rem;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.9);
             margin-top: 12px;
             max-width: 540px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: center;
-            margin-top: 28px;
-        }
-
         .hero .btn-primary {
             background: #fff;
             color: var(--primary);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 28px;
         }
 
         .hero .btn-primary:hover {
             background: #f0f4f8;
-            transform: translateY(-2px);
+            transform: scale(1.02);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
         }
 
-        .hero .btn-secondary {
-            background: transparent;
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .hero .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.6);
-            color: #fff;
-        }
-
-        /* ===== FEATURES ===== */
-        .features {
-            padding: 72px 0;
+        /* ===== FEATURES SECTION ===== */
+        .features-section {
+            padding: 64px 0;
             background: #fff;
-        }
-
-        .features-header {
-            text-align: center;
-            margin-bottom: 48px;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
         }
 
         .feature-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            overflow: hidden;
             border-radius: var(--radius);
-            padding: 28px 24px 32px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
             transition: box-shadow var(--transition), transform var(--transition);
-            text-align: center;
         }
 
         .feature-card:hover {
             box-shadow: var(--shadow-md);
-            transform: translateY(-4px);
+            transform: translateY(-2px);
         }
 
-        .feature-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            background: var(--secondary);
-            border-radius: 50%;
-            font-size: 1.75rem;
-            margin-bottom: 16px;
+        .feature-card img {
+            width: 100%;
+            height: 176px;
+            object-fit: cover;
+        }
+
+        .feature-card .card-content {
+            padding: 24px;
         }
 
         .feature-card h3 {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 8px;
             color: var(--text-primary);
         }
 
         .feature-card p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 6px;
             line-height: 1.5;
         }
 
         /* ===== WALLET SECTION ===== */
         .wallet-section {
-            padding: 72px 0;
+            padding: 64px 0;
             background: var(--secondary);
         }
 
         .wallet-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 48px;
+            gap: 40px;
             align-items: center;
         }
 
@@ -380,11 +366,12 @@
             font-weight: 700;
             letter-spacing: -0.02em;
             line-height: 1.2;
+            color: var(--text-primary);
         }
 
         .wallet-content p {
-            font-size: 1.05rem;
-            color: var(--text-secondary);
+            font-size: 1rem;
+            color: var(--text-muted);
             margin-top: 12px;
             max-width: 480px;
         }
@@ -395,171 +382,36 @@
 
         .wallet-image {
             border-radius: var(--radius);
-            background: var(--primary);
-            aspect-ratio: 16/10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 4rem;
-            font-weight: 700;
-            box-shadow: var(--shadow-lg);
-            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
-            position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow-md);
         }
 
-        .wallet-image::after {
-            content: '📱';
-            font-size: 5rem;
-            opacity: 0.9;
-        }
-
-        /* ===== STATS ===== */
-        .stats {
-            padding: 56px 0;
-            background: #fff;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 32px;
-            text-align: center;
-        }
-
-        .stat-item .number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: -0.02em;
-        }
-
-        .stat-item .label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        /* ===== TESTIMONIALS ===== */
-        .testimonials {
-            padding: 72px 0;
-            background: #fff;
-        }
-
-        .testimonials-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 28px;
-        }
-
-        .testimonial-card {
-            background: var(--secondary);
-            border-radius: var(--radius);
-            padding: 28px 24px;
-            border: 1px solid var(--border-color);
-        }
-
-        .testimonial-card .stars {
-            color: #f59e0b;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-
-        .testimonial-card blockquote {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin: 12px 0;
-            font-style: italic;
-            line-height: 1.5;
-        }
-
-        .testimonial-card .author {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-        }
-
-        .testimonial-card .role {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* ===== CTA ===== */
-        .cta-section {
-            padding: 72px 0;
-            background: var(--primary);
-            text-align: center;
-            color: #fff;
-        }
-
-        .cta-section h2 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .cta-section p {
-            font-size: 1.1rem;
-            opacity: 0.85;
-            max-width: 520px;
-            margin: 8px auto 28px;
-        }
-
-        .cta-section .btn-primary {
-            background: #fff;
-            color: var(--primary);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .cta-section .btn-primary:hover {
-            background: #f0f4f8;
-            transform: translateY(-2px);
+        .wallet-image img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* ===== FOOTER ===== */
         .footer {
-            background: var(--primary-dark);
-            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid var(--border-color);
+            background: var(--secondary);
             padding: 32px 0;
+        }
+
+        .footer-inner {
             text-align: center;
             font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 16px;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.6);
-            transition: color var(--transition);
-            font-size: 0.85rem;
-        }
-
-        .footer-links a:hover {
-            color: #fff;
-        }
-
-        .footer-divider {
-            width: 60px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 12px auto;
+            color: var(--text-muted);
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.25rem;
@@ -576,10 +428,6 @@
 
             .wallet-content p {
                 max-width: 100%;
-            }
-
-            .wallet-image {
-                aspect-ratio: 16/9;
             }
 
             .nav {
@@ -611,31 +459,16 @@
 
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
-            .testimonials-grid {
-                grid-template-columns: 1fr;
+            .hero {
+                min-height: 400px;
+                padding: 60px 16px;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .hero-actions .btn-primary,
-            .hero-actions .btn-secondary {
-                width: 100%;
-                max-width: 280px;
-            }
-
-            .footer-links {
-                gap: 14px;
-                flex-direction: column;
-                align-items: center;
+            .container {
+                padding: 0 16px;
             }
         }
 
@@ -645,21 +478,12 @@
             }
 
             .hero {
-                min-height: 380px;
+                min-height: 350px;
                 padding: 40px 16px;
             }
 
-            .container {
-                padding: 0 16px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-            }
-
-            .stat-item .number {
-                font-size: 1.75rem;
+            .feature-card img {
+                height: 140px;
             }
         }
     </style>
@@ -669,7 +493,7 @@
     <!-- ===== HEADER ===== -->
     <header class="header">
         <div class="container header-inner">
-            <a href="/" class="logo">
+            <a class="logo active" href="/" aria-current="page">
                 <span class="logo-icon">W</span>
                 <span>Waafi Loans</span>
             </a>
@@ -678,7 +502,7 @@
                 <a href="/" class="active">Home</a>
                 <a href="/apply">Apply Now</a>
                 <a href="/testimonials">Testimonials</a>
-                <a href="/terms">Terms</a>
+                <a href="/terms">Terms and Conditions</a>
                 <a href="/loan-policy">Loan Policy</a>
                 <button class="lang-toggle" aria-label="Change language">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -690,163 +514,103 @@
                 </button>
             </nav>
 
-            <button class="mobile-menu-btn" id="menuToggle" aria-label="Toggle menu">
+            <button class="mobile-menu-btn" id="menuToggle" aria-label="Menu">
                 ☰
             </button>
         </div>
     </header>
 
-    <!-- ===== HERO ===== -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <h1>Fast &amp; Secure Loans with Waafi</h1>
-            <p>Get instant access to loans from $50 to $20,000. Apply in minutes, get approved fast.</p>
-            <div class="hero-actions">
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+
+        <!-- ===== HERO SECTION ===== -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <h1>Fast &amp; Secure Loans with Waafi</h1>
+                <p>Get instant access to loans from $50 to $20,000. Apply in minutes, get approved fast.</p>
                 <a href="/apply" class="btn-primary">Apply for a Loan</a>
-                <a href="#how-it-works" class="btn-secondary">Learn More</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ===== FEATURES ===== -->
-    <section class="features" id="how-it-works">
-        <div class="container">
-            <div class="features-header">
-                <h2 class="section-title">Why Choose Waafi?</h2>
-                <p class="section-subtitle">Simple, fast, and secure — designed for your convenience.</p>
-            </div>
+        <!-- ===== FEATURES SECTION ===== -->
+        <section class="features-section">
+            <div class="container">
+                <div class="features-grid">
+                    <!-- Card 1: How It Works -->
+                    <article class="feature-card">
+                        <img 
+                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%231a3a5c' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='24' font-weight='bold'%3EHow It Works%3C/text%3E%3C/svg%3E" 
+                            alt="How It Works" 
+                            loading="lazy" 
+                            width="800" 
+                            height="600" 
+                        />
+                        <div class="card-content">
+                            <h3>How It Works</h3>
+                            <p>Simple 3-step process: Apply, Verify, Get Funded. Our streamlined process makes borrowing easy.</p>
+                        </div>
+                    </article>
 
-            <div class="features-grid">
-                <article class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>How It Works</h3>
-                    <p>Simple 3-step process: Apply, Verify, Get Funded. Our streamlined process makes borrowing easy.</p>
-                </article>
+                    <!-- Card 2: Fast Approval -->
+                    <article class="feature-card">
+                        <img 
+                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%232a5a8c' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='24' font-weight='bold'%3EFast Approval%3C/text%3E%3C/svg%3E" 
+                            alt="Fast Approval" 
+                            loading="lazy" 
+                            width="800" 
+                            height="600" 
+                        />
+                        <div class="card-content">
+                            <h3>Fast Approval</h3>
+                            <p>Get your loan approved within minutes. Our advanced system ensures quick decisions.</p>
+                        </div>
+                    </article>
 
-                <article class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Fast Approval</h3>
-                    <p>Get your loan approved within minutes. Our advanced system ensures quick decisions.</p>
-                </article>
-
-                <article class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>Mobile-Based Process</h3>
-                    <p>Apply from anywhere using your mobile phone. Powered by your Waafi Wallet.</p>
-                </article>
-
-                <article class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Secure &amp; Private</h3>
-                    <p>Your data is encrypted and protected. We prioritize your privacy and security.</p>
-                </article>
-
-                <article class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <h3>Flexible Amounts</h3>
-                    <p>Borrow from $50 up to $20,000. Choose the amount that fits your needs.</p>
-                </article>
-
-                <article class="feature-card">
-                    <div class="feature-icon">🕒</div>
-                    <h3>24/7 Access</h3>
-                    <p>Apply anytime, day or night. Our platform is always available for your convenience.</p>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== STATS ===== -->
-    <section class="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="number">50K+</div>
-                    <div class="label">Happy Customers</div>
-                </div>
-                <div class="stat-item">
-                    <div class="number">$10M+</div>
-                    <div class="label">Loans Disbursed</div>
-                </div>
-                <div class="stat-item">
-                    <div class="number">98%</div>
-                    <div class="label">Approval Rate</div>
-                </div>
-                <div class="stat-item">
-                    <div class="number">4.8★</div>
-                    <div class="label">Average Rating</div>
+                    <!-- Card 3: Mobile-Based Process -->
+                    <article class="feature-card">
+                        <img 
+                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%233a6a9c' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='24' font-weight='bold'%3EMobile-Based%3C/text%3E%3C/svg%3E" 
+                            alt="Mobile-Based Process" 
+                            loading="lazy" 
+                            width="800" 
+                            height="600" 
+                        />
+                        <div class="card-content">
+                            <h3>Mobile-Based Process</h3>
+                            <p>Apply from anywhere using your mobile phone. Powered by your Waafi Wallet.</p>
+                        </div>
+                    </article>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ===== WALLET SECTION ===== -->
-    <section class="wallet-section">
-        <div class="container wallet-grid">
-            <div class="wallet-content">
-                <h2>Powered by Waafi Wallet</h2>
-                <p>Your Waafi Wallet is all you need. Apply, verify, and receive loans directly through your mobile wallet. Fast, secure, and hassle-free.</p>
-                <a href="/apply" class="btn-primary">Apply Now</a>
-            </div>
-            <div class="wallet-image" aria-label="Waafi Wallet mobile app preview"></div>
-        </div>
-    </section>
-
-    <!-- ===== TESTIMONIALS ===== -->
-    <section class="testimonials">
-        <div class="container">
-            <div class="testimonials-header">
-                <h2 class="section-title">What Our Customers Say</h2>
-                <p class="section-subtitle">Real stories from real people who trusted Waafi.</p>
-            </div>
-
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"I got my loan approved in under 10 minutes. The process was so smooth and the funds were in my wallet instantly!"</blockquote>
-                    <div class="author">— Sarah M.</div>
-                    <div class="role">Nairobi, Kenya</div>
+        <!-- ===== WALLET SECTION ===== -->
+        <section class="wallet-section">
+            <div class="container wallet-grid">
+                <div class="wallet-content">
+                    <h2>Powered by Waafi Wallet</h2>
+                    <p>Your Waafi Wallet is all you need. Apply, verify, and receive loans directly through your mobile wallet. Fast, secure, and hassle-free.</p>
+                    <a href="/apply" class="btn-primary">Apply Now</a>
                 </div>
-
-                <div class="testimonial-card">
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"Waafi helped me when I needed it most. The interest rates are fair and the repayment terms are flexible."</blockquote>
-                    <div class="author">— James K.</div>
-                    <div class="role">Mombasa, Kenya</div>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"I love how easy it is to apply right from my phone. No paperwork, no queues — just quick and reliable service."</blockquote>
-                    <div class="author">— Amina D.</div>
-                    <div class="role">Kisumu, Kenya</div>
+                <div class="wallet-image">
+                    <img 
+                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%231a3a5c' width='800' height='600'/%3E%3Crect x='50' y='50' width='700' height='500' rx='20' fill='%23f0f4f8'/%3E%3Crect x='100' y='100' width='600' height='60' rx='10' fill='%23fff'/%3E%3Crect x='100' y='190' width='250' height='30' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='240' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='300' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='360' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='430' width='200' height='50' rx='10' fill='%231a3a5c'/%3E%3C/svg%3E" 
+                        alt="Waafi Wallet mobile app" 
+                        loading="lazy" 
+                        width="800" 
+                        height="600" 
+                    />
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ===== CTA ===== -->
-    <section class="cta-section">
-        <div class="container">
-            <h2>Ready to Get Started?</h2>
-            <p>Join thousands of satisfied customers. Apply for your loan today and get funded in minutes.</p>
-            <a href="/apply" class="btn-primary">Apply for a Loan</a>
-        </div>
-    </section>
+    </main>
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-links">
-                <a href="/">Home</a>
-                <a href="/apply">Apply Now</a>
-                <a href="/testimonials">Testimonials</a>
-                <a href="/terms">Terms and Conditions</a>
-                <a href="/loan-policy">Loan Policy</a>
-            </div>
-            <div class="footer-divider"></div>
-            <p>&copy; 2026 Waafi Loans. All rights reserved.</p>
+        <div class="container footer-inner">
+            © 2026 Waafi Loans. All rights reserved.
         </div>
     </footer>
 
