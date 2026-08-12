@@ -12,7 +12,6 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>W</text></svg>" />
     <style>
-        /* ===== RESET ===== */
         *,
         *::before,
         *::after {
@@ -21,27 +20,20 @@
             box-sizing: border-box;
         }
 
-        /* ===== OKLCH COLOR VARIABLES ===== */
         :root {
             --primary: oklch(56% .14 152);
-            --primary-10: oklab(0.56 -0.123613 0.065726 / 0.10);
-            --primary-20: oklab(0.56 -0.123613 0.065726 / 0.20);
             --primary-85: oklab(0.56 -0.123613 0.065726 / 0.85);
             --secondary: oklch(96% .02 150);
             --background: oklch(99.5% .003 145);
             --card: oklch(100% 0 0);
             --border: oklch(91% .012 150);
-            --foreground: oklch(22% .02 150);
-            --foreground-40: oklab(0.22 -0.0173205 0.01 / 0.4);
             --text-primary: oklch(22% .02 150);
             --text-secondary: oklch(50% .02 152);
             --text-muted: oklch(50% .02 152);
             --radius: 16px;
             --radius-sm: 10px;
-            --radius-xl: 12px;
             --transition: 0.25s cubic-bezier(0.16, 1, 0.32, 1);
             --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
         html {
@@ -56,7 +48,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            margin: 0;
         }
 
         a {
@@ -70,7 +61,6 @@
             height: auto;
         }
 
-        /* ===== UTILITY ===== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -78,6 +68,28 @@
         }
 
         .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px 32px;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary-dark {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -89,79 +101,14 @@
             border-radius: var(--radius-sm);
             border: none;
             cursor: pointer;
-            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+            transition: all var(--transition);
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         }
 
-        .btn-primary:hover {
+        .btn-primary-dark:hover {
             background: oklch(50% .14 152);
             transform: scale(1.02);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 1rem;
-            padding: 14px 32px;
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--primary);
-            cursor: pointer;
-            transition: all var(--transition);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-10);
-            transform: scale(1.02);
-        }
-
-        /* ===== SECTION HEADERS ===== */
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-header h2 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-            color: var(--text-primary);
-        }
-
-        .section-header p {
-            font-size: 1.125rem;
-            color: var(--text-muted);
-            max-width: 640px;
-            margin: 8px auto 0;
-        }
-
-        .section-badge {
-            display: inline-block;
-            padding: 4px 16px;
-            background: var(--primary-10);
-            color: var(--primary);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            animation: pulse-badge 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-badge {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
         }
 
         /* ===== HEADER ===== */
@@ -201,29 +148,6 @@
             border-radius: var(--radius-sm);
             font-size: 0.85rem;
             font-weight: 700;
-            position: relative;
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--primary);
-            opacity: 0;
-            animation: glow-ring 2s ease-in-out infinite;
-        }
-
-        @keyframes glow-ring {
-            0%,
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scale(1.1);
-            }
         }
 
         .nav {
@@ -256,7 +180,7 @@
             border-radius: 4px;
         }
 
-        /* ===== LANGUAGE DROPDOWN ===== */
+        /* Language Dropdown */
         .lang-dropdown {
             position: relative;
             display: inline-block;
@@ -274,12 +198,12 @@
             font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: border-color var(--transition), background var(--transition);
+            transition: all var(--transition);
         }
 
         .lang-toggle:hover {
             border-color: var(--primary);
-            background: var(--primary-10);
+            background: oklab(0.56 -0.123613 0.065726 / 0.04);
         }
 
         .lang-toggle svg {
@@ -315,7 +239,7 @@
             font-size: 0.9rem;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: background var(--transition), color var(--transition);
+            transition: all var(--transition);
         }
 
         .lang-dropdown-menu button:hover {
@@ -328,7 +252,6 @@
             font-weight: 600;
         }
 
-        /* ===== MOBILE MENU ===== */
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -366,42 +289,12 @@
             max-width: 720px;
         }
 
-        .hero-badge {
-            display: inline-block;
-            padding: 6px 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(4px);
-            border-radius: 20px;
-            color: #fff;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 16px;
-            animation: pulse-badge 2s ease-in-out infinite;
-        }
-
         .hero h1 {
             font-size: 3.25rem;
             font-weight: 700;
             letter-spacing: -0.03em;
             line-height: 1.1;
             color: #fff;
-        }
-
-        .hero h1 .highlight {
-            position: relative;
-            display: inline-block;
-            color: #fff;
-        }
-
-        .hero h1 .highlight::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
         }
 
         .hero p {
@@ -413,42 +306,14 @@
             margin-right: auto;
         }
 
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: center;
+        .hero .btn-primary {
             margin-top: 28px;
         }
 
-        .hero .btn-primary {
+        /* ===== FEATURES SECTION ===== */
+        .features-section {
+            padding: 64px 0;
             background: #fff;
-            color: var(--primary);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .hero .btn-primary:hover {
-            background: var(--secondary);
-            transform: scale(1.02);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-        }
-
-        .hero .btn-secondary {
-            background: transparent;
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .hero .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.6);
-            color: #fff;
-        }
-
-        /* ===== WHY CHOOSE US ===== */
-        .why-section {
-            padding: 72px 0;
-            background: var(--card);
         }
 
         .features-grid {
@@ -463,389 +328,80 @@
             border: 1px solid var(--border);
             background: var(--card);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-            transition: box-shadow var(--transition), transform var(--transition);
-            text-align: center;
-            padding: 32px 24px;
+            transition: all var(--transition);
         }
 
         .feature-card:hover {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transform: translateY(-4px);
+            transform: translateY(-2px);
         }
 
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary-10);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            margin: 0 auto 16px;
-            transition: transform var(--transition);
+        .feature-card img {
+            width: 100%;
+            height: 176px;
+            object-fit: cover;
+            display: block;
         }
 
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1);
+        .feature-card .card-content {
+            padding: 24px;
         }
 
         .feature-card h3 {
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 6px;
         }
 
         .feature-card p {
             font-size: 0.9rem;
             color: var(--text-muted);
+            margin-top: 6px;
             line-height: 1.5;
         }
 
-        /* ===== BROWSE BY CATEGORY ===== */
-        .category-section {
-            padding: 72px 0;
+        /* ===== WALLET SECTION ===== */
+        .wallet-section {
+            padding: 64px 0;
             background: var(--secondary);
         }
 
-        .category-grid {
+        .wallet-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .category-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-            border: 1px solid var(--border);
-            transition: all var(--transition);
-            cursor: pointer;
-        }
-
-        .category-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary);
-        }
-
-        .category-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .category-card h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .category-card p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* ===== FEATURED OPPORTUNITIES ===== */
-        .featured-section {
-            padding: 72px 0;
-            background: var(--card);
-        }
-
-        .opportunity-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .opportunity-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: all var(--transition);
-        }
-
-        .opportunity-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .opportunity-image {
-            height: 200px;
-            background: var(--secondary);
-            display: flex;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
             align-items: center;
-            justify-content: center;
-            font-size: 3rem;
         }
 
-        .opportunity-body {
-            padding: 20px 24px 24px;
-        }
-
-        .opportunity-body .tag {
-            display: inline-block;
-            padding: 2px 12px;
-            background: var(--primary-10);
-            color: var(--primary);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .opportunity-body h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .opportunity-body p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        /* ===== HOW IT WORKS ===== */
-        .how-section {
-            padding: 72px 0;
-            background: var(--secondary);
-        }
-
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-        }
-
-        .step-card {
-            text-align: center;
-            position: relative;
-        }
-
-        .step-number {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 auto 16px;
-            position: relative;
-        }
-
-        .step-card:not(:last-child) .step-number::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: calc(100% + 16px);
-            width: calc(100% + 16px);
-            height: 2px;
-            background: var(--border);
-        }
-
-        .step-card h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .step-card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        /* ===== TESTIMONIALS ===== */
-        .testimonials-section {
-            padding: 72px 0;
-            background: var(--card);
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .testimonial-card {
-            background: var(--secondary);
-            border-radius: var(--radius);
-            padding: 24px;
-            border: 1px solid var(--border);
-            transition: all var(--transition);
-        }
-
-        .testimonial-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .testimonial-stars {
-            color: #f59e0b;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-
-        .testimonial-card blockquote {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            font-style: italic;
-            line-height: 1.6;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .testimonial-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary-10);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .testimonial-author .name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .testimonial-author .role {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* ===== SUCCESS STORIES ===== */
-        .success-section {
-            padding: 72px 0;
-            background: var(--secondary);
-        }
-
-        .success-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        .success-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 32px;
-            border: 1px solid var(--border);
-            display: flex;
-            gap: 24px;
-            align-items: flex-start;
-            transition: all var(--transition);
-        }
-
-        .success-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .success-icon {
-            font-size: 2rem;
-            flex-shrink: 0;
-            width: 48px;
-            height: 48px;
-            background: var(--primary-10);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .success-content h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .success-content p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .success-content .amount {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 2px 12px;
-            background: var(--primary-10);
-            color: var(--primary);
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        /* ===== OUR IMPACT ===== */
-        .impact-section {
-            padding: 72px 0;
-            background: var(--primary);
-            color: #fff;
-        }
-
-        .impact-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 32px;
-            text-align: center;
-        }
-
-        .impact-item .number {
-            font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            display: block;
-        }
-
-        .impact-item .label {
-            font-size: 1rem;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        /* ===== CTA SECTION ===== */
-        .cta-section {
-            padding: 72px 0;
-            background: var(--card);
-            text-align: center;
-        }
-
-        .cta-section h2 {
+        .wallet-content h2 {
             font-size: 2.25rem;
             font-weight: 700;
             letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text-primary);
         }
 
-        .cta-section p {
-            font-size: 1.1rem;
+        .wallet-content p {
+            font-size: 1rem;
             color: var(--text-muted);
-            max-width: 520px;
-            margin: 8px auto 28px;
+            margin-top: 12px;
+            max-width: 480px;
         }
 
-        .cta-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: center;
+        .wallet-content .btn-primary-dark {
+            margin-top: 24px;
+        }
+
+        .wallet-image {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .wallet-image img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* ===== FOOTER ===== */
@@ -861,216 +417,25 @@
             color: var(--text-muted);
         }
 
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 16px;
-        }
-
-        .footer-links a {
-            color: var(--text-muted);
-            transition: color var(--transition);
-            font-size: 0.85rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .footer-divider {
-            width: 60px;
-            height: 1px;
-            background: var(--border);
-            margin: 12px auto;
-        }
-
-        /* ===== LOVABLE BADGE ===== */
-        #lovable-badge {
-            --badge-bg: #1b1b1b;
-            --badge-text: #c5c1b9;
-            --badge-text-hover: #dcdad5;
-            --badge-radius: 6px;
-            --badge-padding: 8px;
-            --badge-gap: 6px;
-            --badge-shadow: 0 0 0 1px rgba(0, 0, 0, 0.88), 0 1px 0 0 rgba(0, 0, 0, 0.04), 0 2px 2px -1px rgba(0, 0, 0, 0.08), 0 4px 4px -2px rgba(0, 0, 0, 0.08), 0 8px 8px -4px rgba(0, 0, 0, 0.08), 0 16px 16px -8px rgba(0, 0, 0, 0.08);
-            --badge-transition-duration: 0.2s;
-            --badge-transition-easing: cubic-bezier(0.16, 1, 0.32, 1);
-            --focus-color: #575ECF;
-            --focus-offset: 2px;
-            --focus-width: 2px;
-            
-            position: fixed;
-            bottom: 12px;
-            right: 12px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            z-index: 1000000;
-            background-color: var(--badge-bg) !important;
-            color: var(--badge-text) !important;
-            border-radius: var(--badge-radius);
-            box-shadow: var(--badge-shadow) !important;
-            font-size: 12px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-weight: 400 !important;
-            text-transform: none !important;
-            font-feature-settings: normal !important;
-            transform: translateZ(0);
-            will-change: transform, opacity;
-        }
-
-        #lovable-badge-cta {
-            display: flex;
-            align-items: center;
-            gap: var(--badge-gap);
-            padding: 0 var(--badge-padding);
-            height: 100%;
-            color: inherit;
-            text-decoration: none;
-            white-space: nowrap;
-            border-radius: var(--badge-radius) 0 0 var(--badge-radius);
-            transition: background-color var(--badge-transition-duration) ease, color var(--badge-transition-duration) ease, transform 0.1s ease;
-        }
-
-        #lovable-badge-cta:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--badge-text-hover);
-        }
-
-        #lovable-badge-cta:active {
-            transform: scale(0.98);
-        }
-
-        #lovable-badge-cta:focus {
-            outline: none;
-        }
-
-        #lovable-badge-cta:focus-visible {
-            outline: var(--focus-width) solid var(--focus-color);
-            outline-offset: var(--focus-offset);
-            z-index: 1;
-        }
-
-        #lovable-badge-text {
-            line-height: 1;
-        }
-
-        #lovable-badge-divider {
-            width: 1px;
-            height: 24px;
-            background-color: rgba(255, 255, 255, 0.04);
-            flex-shrink: 0;
-        }
-
-        #lovable-badge-close {
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
-            min-height: 24px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0 var(--badge-radius) var(--badge-radius) 0;
-            flex-shrink: 0;
-            transition: background-color var(--badge-transition-duration) ease, transform 0.1s ease;
-        }
-
-        #lovable-badge-close:hover {
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        #lovable-badge-close:active {
-            transform: scale(0.92);
-        }
-
-        #lovable-badge-close:focus {
-            outline: none;
-        }
-
-        #lovable-badge-close:focus-visible {
-            outline: var(--focus-width) solid var(--focus-color);
-            outline-offset: calc(var(--focus-offset) * -1);
-            z-index: 1;
-        }
-
-        #lovable-badge-close svg path {
-            fill: var(--badge-text);
-            transition: fill var(--badge-transition-duration) ease;
-        }
-
-        #lovable-badge-close:hover svg path {
-            fill: var(--badge-text-hover);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            #lovable-badge-cta,
-            #lovable-badge-close,
-            #lovable-badge-close svg path {
-                transition: none;
-            }
-            #lovable-badge-cta:active,
-            #lovable-badge-close:active {
-                transform: none;
-            }
-        }
-
-        @media (prefers-contrast: high) {
-            #lovable-badge {
-                --badge-bg: #000;
-                --badge-text: #fff;
-                --badge-text-hover: #fff;
-                border: 2px solid currentColor;
-            }
-            #lovable-badge-cta:focus-visible,
-            #lovable-badge-close:focus-visible {
-                outline-width: 3px;
-            }
-        }
-
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
-            .features-grid,
-            .opportunity-grid,
-            .testimonials-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .category-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .steps-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            .step-card:not(:last-child) .step-number::after {
-                display: none;
-            }
-            .impact-grid {
+            .features-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
-            body {
-                overflow: auto;
-            }
-
             .hero h1 {
                 font-size: 2.25rem;
             }
-            .hero-actions {
-                flex-direction: column;
-                align-items: center;
+
+            .wallet-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
             }
-            .hero-actions .btn-primary,
-            .hero-actions .btn-secondary {
-                width: 100%;
-                max-width: 280px;
+
+            .wallet-content p {
+                max-width: 100%;
             }
 
             .nav {
@@ -1087,19 +452,24 @@
                 gap: 16px;
                 align-items: flex-start;
             }
+
             .nav.open {
                 display: flex;
             }
+
             .mobile-menu-btn {
                 display: block;
             }
+
             .lang-dropdown {
                 width: 100%;
             }
+
             .lang-toggle {
                 width: 100%;
                 justify-content: center;
             }
+
             .lang-dropdown-menu {
                 position: static;
                 width: 100%;
@@ -1108,11 +478,7 @@
                 margin-top: 4px;
             }
 
-            .features-grid,
-            .opportunity-grid,
-            .testimonials-grid,
-            .category-grid,
-            .success-grid {
+            .features-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
@@ -1121,29 +487,9 @@
                 min-height: 400px;
                 padding: 60px 16px;
             }
+
             .container {
                 padding: 0 16px;
-            }
-
-            .section-header h2 {
-                font-size: 1.75rem;
-            }
-            .success-card {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            .impact-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-            }
-            .impact-item .number {
-                font-size: 2rem;
-            }
-            .footer-links {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
             }
         }
 
@@ -1151,15 +497,14 @@
             .hero h1 {
                 font-size: 1.75rem;
             }
+
             .hero {
                 min-height: 350px;
                 padding: 40px 16px;
             }
-            .impact-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .impact-item .number {
-                font-size: 1.75rem;
+
+            .feature-card img {
+                height: 140px;
             }
         }
     </style>
@@ -1188,7 +533,7 @@
                             <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
                             <path d="M2 12h20" />
                         </svg>
-                        <span id="currentLang">EN</span>
+                        EN
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m6 9 6 6 6-6" />
                         </svg>
@@ -1210,354 +555,71 @@
         </div>
     </header>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Fast &amp; Secure Loans with Waafi</h1>
+            <p>Get instant access to loans from $50 to $20,000. Apply in minutes, get approved fast.</p>
+            <a href="/apply" class="btn-primary">Apply for a Loan</a>
+        </div>
+    </section>
 
-        <!-- ===== HERO SECTION ===== -->
-        <section class="hero" id="home">
-            <div class="hero-bg"></div>
-            <div class="hero-content">
-                <div class="hero-badge">🚀 Trusted by 50,000+ customers</div>
-                <h1>
-                    Fast &amp; Secure Loans<br />
-                    with <span class="highlight">Waafi</span>
-                </h1>
-                <p>Get instant access to loans from $50 to $20,000. Apply in minutes, get approved fast.</p>
-                <div class="hero-actions">
-                    <a href="/apply" class="btn-primary">Apply for a Loan</a>
-                    <a href="#how-it-works" class="btn-secondary">Learn More →</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== WHY CHOOSE US ===== -->
-        <section class="why-section" id="why-us">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-badge">✨ Why Choose Us</span>
-                    <h2>Why Waafi is the Right Choice</h2>
-                    <p>Simple, fast, and secure — designed for your convenience.</p>
-                </div>
-
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
+    <!-- ===== FEATURES ===== -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-grid">
+                <article class="feature-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%23f0f4f8' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%231a3a5c' font-family='Arial' font-size='24' font-weight='bold'%3EHow It Works%3C/text%3E%3C/svg%3E" alt="How It Works" loading="lazy" width="800" height="600" />
+                    <div class="card-content">
                         <h3>How It Works</h3>
                         <p>Simple 3-step process: Apply, Verify, Get Funded. Our streamlined process makes borrowing easy.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🚀</div>
+                </article>
+
+                <article class="feature-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%23f0f4f8' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%231a3a5c' font-family='Arial' font-size='24' font-weight='bold'%3EFast Approval%3C/text%3E%3C/svg%3E" alt="Fast Approval" loading="lazy" width="800" height="600" />
+                    <div class="card-content">
                         <h3>Fast Approval</h3>
                         <p>Get your loan approved within minutes. Our advanced system ensures quick decisions.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📱</div>
+                </article>
+
+                <article class="feature-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%23f0f4f8' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%231a3a5c' font-family='Arial' font-size='24' font-weight='bold'%3EMobile-Based%3C/text%3E%3C/svg%3E" alt="Mobile-Based Process" loading="lazy" width="800" height="600" />
+                    <div class="card-content">
                         <h3>Mobile-Based Process</h3>
                         <p>Apply from anywhere using your mobile phone. Powered by your Waafi Wallet.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔒</div>
-                        <h3>Secure &amp; Private</h3>
-                        <p>Your data is encrypted and protected. We prioritize your privacy and security.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">💰</div>
-                        <h3>Flexible Amounts</h3>
-                        <p>Borrow from $50 up to $20,000. Choose the amount that fits your needs.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🕒</div>
-                        <h3>24/7 Access</h3>
-                        <p>Apply anytime, day or night. Our platform is always available for your convenience.</p>
-                    </div>
-                </div>
+                </article>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- ===== BROWSE BY CATEGORY ===== -->
-        <section class="category-section">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-badge">📂 Browse</span>
-                    <h2>Browse by Category</h2>
-                    <p>Find the perfect loan solution for your needs.</p>
-                </div>
-
-                <div class="category-grid">
-                    <div class="category-card">
-                        <span class="category-icon">🏠</span>
-                        <h4>Home Loans</h4>
-                        <p>Up to $20,000</p>
-                    </div>
-                    <div class="category-card">
-                        <span class="category-icon">🚗</span>
-                        <h4>Auto Loans</h4>
-                        <p>Up to $15,000</p>
-                    </div>
-                    <div class="category-card">
-                        <span class="category-icon">🎓</span>
-                        <h4>Education Loans</h4>
-                        <p>Up to $10,000</p>
-                    </div>
-                    <div class="category-card">
-                        <span class="category-icon">💼</span>
-                        <h4>Business Loans</h4>
-                        <p>Up to $20,000</p>
-                    </div>
-                </div>
+    <!-- ===== WALLET SECTION ===== -->
+    <section class="wallet-section">
+        <div class="container wallet-grid">
+            <div class="wallet-content">
+                <h2>Powered by Waafi Wallet</h2>
+                <p>Your Waafi Wallet is all you need. Apply, verify, and receive loans directly through your mobile wallet. Fast, secure, and hassle-free.</p>
+                <a href="/apply" class="btn-primary-dark">Apply Now</a>
             </div>
-        </section>
-
-        <!-- ===== FEATURED OPPORTUNITIES ===== -->
-        <section class="featured-section">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-badge">⭐ Featured</span>
-                    <h2>Featured Opportunities</h2>
-                    <p>Handpicked loan options with the best rates.</p>
-                </div>
-
-                <div class="opportunity-grid">
-                    <div class="opportunity-card">
-                        <div class="opportunity-image">💼</div>
-                        <div class="opportunity-body">
-                            <span class="tag">Popular</span>
-                            <h4>Business Expansion Loan</h4>
-                            <p>Grow your business with flexible terms and competitive rates.</p>
-                        </div>
-                    </div>
-                    <div class="opportunity-card">
-                        <div class="opportunity-image">🏡</div>
-                        <div class="opportunity-body">
-                            <span class="tag">Best Rate</span>
-                            <h4>Home Improvement Loan</h4>
-                            <p>Renovate your home with our low-interest loan options.</p>
-                        </div>
-                    </div>
-                    <div class="opportunity-card">
-                        <div class="opportunity-image">🎓</div>
-                        <div class="opportunity-body">
-                            <span class="tag">New</span>
-                            <h4>Education Support Loan</h4>
-                            <p>Invest in your future with affordable education financing.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="wallet-image">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%23f0f4f8' width='800' height='600'/%3E%3Crect x='50' y='50' width='700' height='500' rx='20' fill='%23fff'/%3E%3Crect x='100' y='100' width='600' height='60' rx='10' fill='%23e2e8f0'/%3E%3Crect x='100' y='190' width='250' height='30' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='240' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='300' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='360' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='430' width='200' height='50' rx='10' fill='%231a3a5c'/%3E%3Ctext x='400' y='460' text-anchor='middle' fill='white' font-family='Arial' font-size='16' font-weight='bold'%3EWaafi Wallet%3C/text%3E%3C/svg%3E" alt="Waafi Wallet mobile app" loading="lazy" width="800" height="600" />
             </div>
-        </section>
-
-        <!-- ===== HOW IT WORKS ===== -->
-        <section class="how-section" id="how-it-works">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-badge">📋 Process</span>
-                    <h2>How It Works</h2>
-                    <p>Get started in three simple steps.</p>
-                </div>
-
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <h4>Apply</h4>
-                        <p>Fill out our simple online application form. Takes just minutes.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <h4>Verify</h4>
-                        <p>Our system verifies your information quickly and securely.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <h4>Get Funded</h4>
-                        <p>Receive your loan directly in your Waafi Wallet. Fast and easy.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== TESTIMONIALS ===== -->
-        <section class="testimonials-section">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-badge">💬 Testimonials</span>
-                    <h2>What Our Customers Say</h2>
-                    <p>Real stories from real people who trusted Waafi.</p>
-                </div>
-
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">★★★★★</div>
-                        <blockquote>"I got my loan approved in under 10 minutes. The process was so smooth and the funds were in my wallet instantly!"</blockquote>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">SM</div>
-                            <div>
-                                <div class="name">Sarah M.</div>
-                                <div class="role">Nairobi, Kenya</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">★★★★★</div>
-                        <blockquote>"Waafi helped me when I needed it most. The interest rates are fair and the repayment terms are flexible."</blockquote>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">JK</div>
-                            <div>
-                                <div class="name">James K.</div>
-                                <div class="role">Mombasa, Kenya</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">★★★★★</div>
-                        <blockquote>"I love how easy it is to apply right from my phone. No paperwork, no queues — just quick and reliable service."</blockquote>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">AD</div>
-                            <div>
-                                <div class="name">Amina D.</div>
-                                <div class="role">Kisumu, Kenya</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== SUCCESS STORIES ===== -->
-        <section class="success-section">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-badge">🏆 Success Stories</span>
-                    <h2>Our Impact in Numbers</h2>
-                    <p>See how we've helped our customers achieve their goals.</p>
-                </div>
-
-                <div class="success-grid">
-                    <div class="success-card">
-                        <div class="success-icon">👨‍💼</div>
-                        <div class="success-content">
-                            <h4>John's Business Growth</h4>
-                            <p>Used Waafi to expand his small business and increase revenue by 40%.</p>
-                            <span class="amount">💰 $15,000 funded</span>
-                        </div>
-                    </div>
-                    <div class="success-card">
-                        <div class="success-icon">👩‍🎓</div>
-                        <div class="success-content">
-                            <h4>Mary's Education</h4>
-                            <p>Funded her university education with a Waafi loan and graduated with honors.</p>
-                            <span class="amount">🎓 $8,000 funded</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== OUR IMPACT ===== -->
-        <section class="impact-section">
-            <div class="container">
-                <div class="impact-grid">
-                    <div class="impact-item">
-                        <span class="number">50K+</span>
-                        <span class="label">Happy Customers</span>
-                    </div>
-                    <div class="impact-item">
-                        <span class="number">$10M+</span>
-                        <span class="label">Loans Disbursed</span>
-                    </div>
-                    <div class="impact-item">
-                        <span class="number">98%</span>
-                        <span class="label">Approval Rate</span>
-                    </div>
-                    <div class="impact-item">
-                        <span class="number">4.8★</span>
-                        <span class="label">Average Rating</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== CTA SECTION ===== -->
-        <section class="cta-section">
-            <div class="container">
-                <h2>Ready to Get Started?</h2>
-                <p>Join thousands of satisfied customers. Apply for your loan today and get funded in minutes.</p>
-                <div class="cta-actions">
-                    <a href="/apply" class="btn-primary">Apply for a Loan</a>
-                    <a href="#how-it-works" class="btn-secondary">How It Works</a>
-                </div>
-            </div>
-        </section>
-
-    </main>
+        </div>
+    </section>
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-links">
-                <a href="/">Home</a>
-                <a href="/apply">Apply Now</a>
-                <a href="/testimonials">Testimonials</a>
-                <a href="/terms">Terms and Conditions</a>
-                <a href="/loan-policy">Loan Policy</a>
-            </div>
-            <div class="footer-divider"></div>
-            <div class="footer-inner">
-                © 2026 Waafi Loans. All rights reserved.
-            </div>
+        <div class="container footer-inner">
+            © 2026 Waafi Loans. All rights reserved.
         </div>
     </footer>
 
-    <!-- ===== LOVABLE BADGE ===== -->
-    <aside id="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable">
-        <a id="lovable-badge-cta" target="_blank" href="https://lovable.dev/projects/lovp_5mqs04c57f9gmtvsxjg79tt5ej?utm_source=lovable-badge" rel="noopener nofollow" aria-label="Edit with Lovable">
-            <span id="lovable-badge-text">Edit with</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
-                <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .25-.002.449-.006.596H47.51c.018.288.071.538.164.75a1.3 1.3 0 0 0 .491.596c.214.13.465.196.757.196.319 0 .583-.082.792-.246.209-.167.34-.403.393-.706h1.862a2.48 2.48 0 0 1-.485 1.235 2.54 2.54 0 0 1-1.051.805c-.439.188-.949.283-1.53.283-.655 0-1.225-.125-1.708-.375a2.672 2.672 0 0 1-1.13-1.143c-.267-.508-.4-1.137-.4-1.887 0-.712.14-1.327.418-1.843a2.86 2.86 0 0 1 1.155-1.186c.491-.27 1.051-.405 1.678-.405Zm-.044 1.345c-.274 0-.516.068-.725.203a1.29 1.29 0 0 0-.479.59 2.045 2.045 0 0 0-.132.498h2.562a1.873 1.873 0 0 0-.138-.602 1.061 1.061 0 0 0-.418-.516 1.243 1.243 0 0 0-.67-.173Z" clip-rule="evenodd" />
-                <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z" />
-                <path fill="url(#a)" fill-rule="evenodd" d="M2.7 3c1.492 0 2.7 1.192 2.7 2.663v1.012h.9c1.49 0 2.7 1.192 2.7 2.662S7.791 12 6.3 12H0V5.663C0 4.193 1.209 3 2.7 3Z" clip-rule="evenodd" />
-                <defs>
-                    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-1.54236 7.07838 -10.231 -2.15602 4.627 5.022)" gradientUnits="userSpaceOnUse">
-                        <stop offset=".106" stop-color="#FE7B02" />
-                        <stop offset=".394" stop-color="#FE3F21" />
-                        <stop offset=".608" stop-color="#F858BC" />
-                        <stop offset=".929" stop-color="#575ECF" />
-                    </radialGradient>
-                </defs>
-            </svg>
-        </a>
-        <span id="lovable-badge-divider" aria-hidden="true"></span>
-        <button id="lovable-badge-close" aria-label="Dismiss" title="Dismiss" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z" />
-            </svg>
-        </button>
-    </aside>
-
     <!-- ===== SCRIPTS ===== -->
     <script>
-        // ===== LANGUAGE SELECTION =====
-        // Get saved language or default to 'en'
-        const savedLang = localStorage.getItem('waafi-language') || 'en';
-
-        function updateLanguageUI(lang) {
-            const langText = lang === 'en' ? 'EN' : 'SO';
-            document.getElementById('currentLang').textContent = langText;
-
-            // Update dropdown active state
-            document.querySelectorAll('.lang-dropdown-menu button').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === lang);
-            });
-        }
-
-        // ===== Don't show the lovable-badge if the page is in an iframe =====
-        if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
-            var badge = document.getElementById('lovable-badge');
-            if (badge) {
-                badge.style.display = 'none';
-            }
-        }
-
-        // ===== Mobile Menu Toggle =====
+        // Mobile Menu Toggle
         const menuToggle = document.getElementById('menuToggle');
         const mainNav = document.getElementById('mainNav');
 
@@ -1580,7 +642,7 @@
             });
         });
 
-        // ===== Language Dropdown Toggle =====
+        // Language Dropdown
         const langToggle = document.getElementById('langToggle');
         const langMenu = document.getElementById('langMenu');
 
@@ -1589,120 +651,30 @@
             langMenu.classList.toggle('open');
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function() {
             langMenu.classList.remove('open');
         });
 
-        // Language selection from dropdown
         document.querySelectorAll('.lang-dropdown-menu button').forEach(btn => {
             btn.addEventListener('click', function() {
-                const lang = this.dataset.lang;
-                localStorage.setItem('waafi-language', lang);
                 document.querySelectorAll('.lang-dropdown-menu button').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                updateLanguageUI(lang);
+                const lang = this.dataset.lang;
+                const langText = lang === 'en' ? 'EN' : 'SO';
+                langToggle.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                        <path d="M2 12h20" />
+                    </svg>
+                    ${langText}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                    </svg>
+                `;
                 langMenu.classList.remove('open');
-
-                // Redirect to the same page with language parameter
-                // This ensures the user stays on the correct landing page
-                const currentUrl = new URL(window.location.href);
-                currentUrl.searchParams.set('lang', lang);
-                window.location.href = currentUrl.toString();
             });
         });
-
-        // ===== Initialize language UI =====
-        updateLanguageUI(savedLang);
-
-        // ===== Lovable Badge Close =====
-        const closeBtn = document.getElementById('lovable-badge-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                const badge = document.getElementById('lovable-badge');
-                if (badge) {
-                    badge.style.display = 'none';
-                }
-            });
-        }
-
-        // ===== Smooth scroll for anchor links =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                const target = document.querySelector(targetId);
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // ===== Intersection Observer for animations =====
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all section headers and cards
-        document.querySelectorAll('.section-header, .feature-card, .category-card, .opportunity-card, .step-card, .testimonial-card, .success-card, .impact-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-
-        // ===== Counter animation for impact numbers =====
-        function animateCounters() {
-            const counters = document.querySelectorAll('.impact-item .number');
-            counters.forEach(counter => {
-                const text = counter.textContent;
-                const num = parseInt(text.replace(/[^0-9.]/g, ''));
-                const suffix = text.replace(/[0-9.]/g, '');
-                if (isNaN(num)) return;
-
-                let current = 0;
-                const increment = num / 60;
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= num) {
-                        counter.textContent = num + suffix;
-                        clearInterval(timer);
-                    } else {
-                        counter.textContent = Math.floor(current) + suffix;
-                    }
-                }, 20);
-            });
-        }
-
-        // Trigger counter animation when impact section is visible
-        const impactSection = document.querySelector('.impact-section');
-        if (impactSection) {
-            const impactObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        animateCounters();
-                        impactObserver.disconnect();
-                    }
-                });
-            }, { threshold: 0.3 });
-            impactObserver.observe(impactSection);
-        }
     </script>
 
 </body>
