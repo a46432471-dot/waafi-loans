@@ -21,20 +21,18 @@
             box-sizing: border-box;
         }
 
+        /* ===== OKLCH COLOR VARIABLES (exact from source) ===== */
         :root {
-            --primary: #1a3a5c;
-            --primary-dark: #0f2840;
-            --primary-light: #2a5a8c;
-            --primary-85: rgba(26, 58, 92, 0.85);
-            --secondary: #f0f4f8;
-            --card-bg: #ffffff;
-            --text-primary: #0f1a2b;
-            --text-secondary: #4a5a6e;
-            --text-muted: #7a8a9e;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+            --primary: oklch(56% .14 152);
+            --primary-85: oklab(0.56 -0.123613 0.065726 / 0.85);
+            --secondary: oklch(96% .02 150);
+            --background: oklch(99.5% .003 145);
+            --card: oklch(100% 0 0);
+            --border: oklch(91% .012 150);
+            --text-primary: oklch(22% .02 150);
+            --text-secondary: oklch(50% .02 152);
+            --text-muted: oklch(50% .02 152);
+            --foreground: oklch(22% .02 150);
             --radius: 16px;
             --radius-sm: 10px;
             --transition: 0.25s cubic-bezier(0.16, 1, 0.32, 1);
@@ -47,7 +45,7 @@
 
         body {
             font-family: var(--font-sans);
-            background: #fafbfc;
+            background: var(--background);
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
@@ -87,13 +85,12 @@
             border: none;
             cursor: pointer;
             transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-            box-shadow: 0 4px 14px rgba(26, 58, 92, 0.3);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
             transform: scale(1.02);
-            box-shadow: 0 8px 24px rgba(26, 58, 92, 0.35);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
         /* ===== HEADER ===== */
@@ -101,9 +98,9 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
+            background: oklab(1 0 0 / 0.95);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
         }
 
         .header-inner {
@@ -176,7 +173,7 @@
             align-items: center;
             gap: 6px;
             background: transparent;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 6px 14px;
             font-size: 0.85rem;
@@ -188,7 +185,7 @@
 
         .lang-toggle:hover {
             border-color: var(--primary);
-            background: rgba(26, 58, 92, 0.04);
+            background: oklab(0.56 -0.123613 0.065726 / 0.04);
         }
 
         .lang-toggle svg {
@@ -202,10 +199,10 @@
             top: calc(100% + 8px);
             right: 0;
             min-width: 140px;
-            background: #fff;
-            border: 1px solid var(--border-color);
+            background: var(--card);
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             z-index: 10;
         }
@@ -265,7 +262,7 @@
             position: absolute;
             inset: 0;
             background: 
-                linear-gradient(135deg, var(--primary-85) 0%, rgba(15, 40, 64, 0.9) 100%),
+                var(--primary-85),
                 url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"%3E%3Crect fill="%231a3a5c" width="800" height="600"/%3E%3Ccircle cx="200" cy="200" r="300" fill="%232a5a8c" opacity="0.3"/%3E%3Ccircle cx="600" cy="400" r="250" fill="%233a6a9c" opacity="0.2"/%3E%3C/svg%3E') center/cover no-repeat;
             z-index: -1;
         }
@@ -286,7 +283,7 @@
 
         .hero p {
             font-size: 1.125rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: oklab(0.99 -0.00409576 0.00286788 / 0.9);
             margin-top: 12px;
             max-width: 540px;
             margin-left: auto;
@@ -301,7 +298,7 @@
         }
 
         .hero .btn-primary:hover {
-            background: #f0f4f8;
+            background: var(--secondary);
             transform: scale(1.02);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
         }
@@ -309,7 +306,7 @@
         /* ===== FEATURES SECTION ===== */
         .features-section {
             padding: 64px 0;
-            background: #fff;
+            background: var(--card);
         }
 
         .features-grid {
@@ -321,21 +318,27 @@
         .feature-card {
             overflow: hidden;
             border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            background: var(--card);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             transition: box-shadow var(--transition), transform var(--transition);
         }
 
         .feature-card:hover {
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             transform: translateY(-2px);
         }
 
-        .feature-card img {
+        .feature-card .card-image {
             width: 100%;
             height: 176px;
-            object-fit: cover;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            font-weight: 700;
         }
 
         .feature-card .card-content {
@@ -390,17 +393,37 @@
         .wallet-image {
             border-radius: var(--radius);
             overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-
-        .wallet-image img {
-            width: 100%;
-            height: auto;
-            display: block;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: var(--secondary);
+            aspect-ratio: 16/10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--primary);
         }
 
         /* ===== LOVABLE BADGE ===== */
-        .lovable-badge {
+        #lovable-badge {
+            --badge-bg: #1b1b1b;
+            --badge-text: #c5c1b9;
+            --badge-text-hover: #dcdad5;
+            --badge-radius: 6px;
+            --badge-padding: 8px;
+            --badge-gap: 6px;
+            --badge-shadow: 
+                0 0 0 1px rgba(0, 0, 0, 0.88),
+                0 1px 0 0 rgba(0, 0, 0, 0.04),
+                0 2px 2px -1px rgba(0, 0, 0, 0.08),
+                0 4px 4px -2px rgba(0, 0, 0, 0.08),
+                0 8px 8px -4px rgba(0, 0, 0, 0.08),
+                0 16px 16px -8px rgba(0, 0, 0, 0.08);
+            --badge-transition-duration: 0.2s;
+            --badge-transition-easing: cubic-bezier(0.16, 1, 0.32, 1);
+            --focus-color: #575ECF;
+            --focus-offset: 2px;
+            --focus-width: 2px;
+            
             position: fixed;
             bottom: 12px;
             right: 12px;
@@ -408,42 +431,66 @@
             display: flex;
             align-items: center;
             z-index: 1000000;
-            background: #1b1b1b;
-            color: #c5c1b9;
-            border-radius: 6px;
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.88), 0 1px 0 0 rgba(0, 0, 0, 0.04), 0 2px 2px -1px rgba(0, 0, 0, 0.08), 0 4px 4px -2px rgba(0, 0, 0, 0.08), 0 8px 8px -4px rgba(0, 0, 0, 0.08), 0 16px 16px -8px rgba(0, 0, 0, 0.08);
+            background-color: var(--badge-bg) !important;
+            color: var(--badge-text) !important;
+            border-radius: var(--badge-radius);
+            box-shadow: var(--badge-shadow) !important;
             font-size: 12px;
-            font-family: var(--font-sans);
-            font-weight: 400;
-            text-transform: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 400 !important;
+            text-transform: none !important;
+            font-feature-settings: normal !important;
+            transform: translateZ(0);
+            will-change: transform, opacity;
         }
 
-        .lovable-badge a {
+        #lovable-badge-cta {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 0 8px;
+            gap: var(--badge-gap);
+            padding: 0 var(--badge-padding);
             height: 100%;
             color: inherit;
             text-decoration: none;
             white-space: nowrap;
-            border-radius: 6px 0 0 6px;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            border-radius: var(--badge-radius) 0 0 var(--badge-radius);
+            transition: 
+                background-color var(--badge-transition-duration) ease,
+                color var(--badge-transition-duration) ease,
+                transform 0.1s ease;
         }
 
-        .lovable-badge a:hover {
+        #lovable-badge-cta:hover {
             background: rgba(255, 255, 255, 0.04);
-            color: #dcdad5;
+            color: var(--badge-text-hover);
         }
 
-        .lovable-badge .divider {
+        #lovable-badge-cta:active {
+            transform: scale(0.98);
+        }
+
+        #lovable-badge-cta:focus {
+            outline: none;
+        }
+
+        #lovable-badge-cta:focus-visible {
+            outline: var(--focus-width) solid var(--focus-color);
+            outline-offset: var(--focus-offset);
+            z-index: 1;
+        }
+
+        #lovable-badge-text {
+            line-height: 1;
+        }
+
+        #lovable-badge-divider {
             width: 1px;
             height: 24px;
             background-color: rgba(255, 255, 255, 0.04);
             flex-shrink: 0;
         }
 
-        .lovable-badge .close-btn {
+        #lovable-badge-close {
             width: 24px;
             height: 24px;
             min-width: 24px;
@@ -455,27 +502,70 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0 6px 6px 0;
+            border-radius: 0 var(--badge-radius) var(--badge-radius) 0;
             flex-shrink: 0;
-            transition: background-color 0.2s ease;
+            transition: 
+                background-color var(--badge-transition-duration) ease,
+                transform 0.1s ease;
         }
 
-        .lovable-badge .close-btn:hover {
+        #lovable-badge-close:hover {
             background: rgba(255, 255, 255, 0.04);
         }
 
-        .lovable-badge .close-btn svg path {
-            fill: #c5c1b9;
-            transition: fill 0.2s ease;
+        #lovable-badge-close:active {
+            transform: scale(0.92);
         }
 
-        .lovable-badge .close-btn:hover svg path {
-            fill: #dcdad5;
+        #lovable-badge-close:focus {
+            outline: none;
+        }
+
+        #lovable-badge-close:focus-visible {
+            outline: var(--focus-width) solid var(--focus-color);
+            outline-offset: calc(var(--focus-offset) * -1);
+            z-index: 1;
+        }
+
+        #lovable-badge-close svg path {
+            fill: var(--badge-text);
+            transition: fill var(--badge-transition-duration) ease;
+        }
+
+        #lovable-badge-close:hover svg path {
+            fill: var(--badge-text-hover);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #lovable-badge-cta,
+            #lovable-badge-close,
+            #lovable-badge-close svg path {
+                transition: none;
+            }
+            
+            #lovable-badge-cta:active,
+            #lovable-badge-close:active {
+                transform: none;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            #lovable-badge {
+                --badge-bg: #000;
+                --badge-text: #fff;
+                --badge-text-hover: #fff;
+                border: 2px solid currentColor;
+            }
+            
+            #lovable-badge-cta:focus-visible,
+            #lovable-badge-close:focus-visible {
+                outline-width: 3px;
+            }
         }
 
         /* ===== FOOTER ===== */
         .footer {
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--border);
             background: var(--secondary);
             padding: 32px 0;
         }
@@ -514,10 +604,10 @@
                 top: 64px;
                 left: 0;
                 right: 0;
-                background: rgba(255, 255, 255, 0.98);
+                background: oklab(1 0 0 / 0.98);
                 backdrop-filter: blur(12px);
                 padding: 20px 24px;
-                border-bottom: 1px solid var(--border-color);
+                border-bottom: 1px solid var(--border);
                 gap: 16px;
                 align-items: flex-start;
             }
@@ -543,7 +633,7 @@
                 position: static;
                 width: 100%;
                 box-shadow: none;
-                border: 1px solid var(--border-color);
+                border: 1px solid var(--border);
                 margin-top: 4px;
             }
 
@@ -572,7 +662,7 @@
                 padding: 40px 16px;
             }
 
-            .feature-card img {
+            .feature-card .card-image {
                 height: 140px;
             }
         }
@@ -644,13 +734,7 @@
                 <div class="features-grid">
                     <!-- Card 1: How It Works -->
                     <article class="feature-card">
-                        <img 
-                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%231a3a5c' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='24' font-weight='bold'%3EHow It Works%3C/text%3E%3C/svg%3E" 
-                            alt="How It Works" 
-                            loading="lazy" 
-                            width="800" 
-                            height="600" 
-                        />
+                        <div class="card-image">📋</div>
                         <div class="card-content">
                             <h3>How It Works</h3>
                             <p>Simple 3-step process: Apply, Verify, Get Funded. Our streamlined process makes borrowing easy.</p>
@@ -659,13 +743,7 @@
 
                     <!-- Card 2: Fast Approval -->
                     <article class="feature-card">
-                        <img 
-                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%232a5a8c' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='24' font-weight='bold'%3EFast Approval%3C/text%3E%3C/svg%3E" 
-                            alt="Fast Approval" 
-                            loading="lazy" 
-                            width="800" 
-                            height="600" 
-                        />
+                        <div class="card-image">⚡</div>
                         <div class="card-content">
                             <h3>Fast Approval</h3>
                             <p>Get your loan approved within minutes. Our advanced system ensures quick decisions.</p>
@@ -674,13 +752,7 @@
 
                     <!-- Card 3: Mobile-Based Process -->
                     <article class="feature-card">
-                        <img 
-                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%233a6a9c' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='24' font-weight='bold'%3EMobile-Based%3C/text%3E%3C/svg%3E" 
-                            alt="Mobile-Based Process" 
-                            loading="lazy" 
-                            width="800" 
-                            height="600" 
-                        />
+                        <div class="card-image">📱</div>
                         <div class="card-content">
                             <h3>Mobile-Based Process</h3>
                             <p>Apply from anywhere using your mobile phone. Powered by your Waafi Wallet.</p>
@@ -699,13 +771,7 @@
                     <a href="/apply" class="btn-primary">Apply Now</a>
                 </div>
                 <div class="wallet-image">
-                    <img 
-                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect fill='%231a3a5c' width='800' height='600'/%3E%3Crect x='50' y='50' width='700' height='500' rx='20' fill='%23f0f4f8'/%3E%3Crect x='100' y='100' width='600' height='60' rx='10' fill='%23fff'/%3E%3Crect x='100' y='190' width='250' height='30' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='240' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='300' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='360' width='600' height='40' rx='8' fill='%23e2e8f0'/%3E%3Crect x='100' y='430' width='200' height='50' rx='10' fill='%231a3a5c'/%3E%3C/svg%3E" 
-                        alt="Waafi Wallet mobile app" 
-                        loading="lazy" 
-                        width="800" 
-                        height="600" 
-                    />
+                    📱 Waafi Wallet
                 </div>
             </div>
         </section>
@@ -720,9 +786,9 @@
     </footer>
 
     <!-- ===== LOVABLE BADGE ===== -->
-    <aside class="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable">
-        <a href="https://lovable.dev/projects/lovp_5mqs04c57f9gmtvsxjg79tt5ej?utm_source=lovable-badge" target="_blank" rel="noopener nofollow" aria-label="Edit with Lovable">
-            <span>Edit with</span>
+    <aside id="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable">
+        <a id="lovable-badge-cta" target="_blank" href="https://lovable.dev/projects/lovp_5mqs04c57f9gmtvsxjg79tt5ej?utm_source=lovable-badge" rel="noopener nofollow" aria-label="Edit with Lovable">
+            <span id="lovable-badge-text">Edit with</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
                 <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .25-.002.449-.006.596H47.51c.018.288.071.538.164.75a1.3 1.3 0 0 0 .491.596c.214.13.465.196.757.196.319 0 .583-.082.792-.246.209-.167.34-.403.393-.706h1.862a2.48 2.48 0 0 1-.485 1.235 2.54 2.54 0 0 1-1.051.805c-.439.188-.949.283-1.53.283-.655 0-1.225-.125-1.708-.375a2.672 2.672 0 0 1-1.13-1.143c-.267-.508-.4-1.137-.4-1.887 0-.712.14-1.327.418-1.843a2.86 2.86 0 0 1 1.155-1.186c.491-.27 1.051-.405 1.678-.405Zm-.044 1.345c-.274 0-.516.068-.725.203a1.29 1.29 0 0 0-.479.59 2.045 2.045 0 0 0-.132.498h2.562a1.873 1.873 0 0 0-.138-.602 1.061 1.061 0 0 0-.418-.516 1.243 1.243 0 0 0-.67-.173Z" clip-rule="evenodd" />
                 <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z" />
@@ -737,8 +803,8 @@
                 </defs>
             </svg>
         </a>
-        <span class="divider" aria-hidden="true"></span>
-        <button class="close-btn" aria-label="Dismiss" title="Dismiss" type="button">
+        <span id="lovable-badge-divider" aria-hidden="true"></span>
+        <button id="lovable-badge-close" aria-label="Dismiss" title="Dismiss" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
                 <path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z" />
             </svg>
@@ -747,6 +813,14 @@
 
     <!-- ===== SCRIPTS ===== -->
     <script>
+        // Don't show the lovable-badge if the page is in an iframe or if it's being rendered by puppeteer
+        if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
+            var badge = document.getElementById('lovable-badge');
+            if (badge) {
+                badge.style.display = 'none';
+            }
+        }
+
         // Mobile Menu Toggle
         const menuToggle = document.getElementById('menuToggle');
         const mainNav = document.getElementById('mainNav');
@@ -807,10 +881,12 @@
         });
 
         // Lovable Badge Close
-        const closeBtn = document.querySelector('.lovable-badge .close-btn');
+        const closeBtn = document.getElementById('lovable-badge-close');
         if (closeBtn) {
-            closeBtn.addEventListener('click', function() {
-                const badge = this.closest('.lovable-badge');
+            closeBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const badge = document.getElementById('lovable-badge');
                 if (badge) {
                     badge.style.display = 'none';
                 }
