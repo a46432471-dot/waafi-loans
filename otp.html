@@ -743,12 +743,12 @@
             });
         }
 
-        // ===== SHOW APPROVED STATE =====
+        // ===== SHOW APPROVED STATE - REDIRECT TO SUCCESS PAGE =====
         function showApproved() {
             isComplete = true;
             if (statusCheckInterval) clearInterval(statusCheckInterval);
             
-            // Update UI
+            // Update UI briefly before redirect
             pageTitle.textContent = '✅ Loan Approved!';
             pageSubtitle.textContent = 'Your loan has been approved successfully';
             otpContainer.style.display = 'none';
@@ -758,7 +758,7 @@
             showStatusMessage(
                 '🎉',
                 'Your loan has been APPROVED!',
-                'Funds will be sent to your Waafi Wallet shortly.',
+                'Redirecting you to your loan details...',
                 'approved'
             );
             
@@ -768,10 +768,10 @@
             retryBtn.style.display = 'none';
             contactSupportBtn.style.display = 'none';
             
-            // Auto redirect after 5 seconds
+            // 🚀 REDIRECT TO SUCCESS PAGE AFTER 2 SECONDS
             setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 5000);
+                window.location.href = 'success.html';
+            }, 2000);
         }
 
         // ===== SHOW REJECTED STATE =====
@@ -1024,7 +1024,7 @@
         verifyBtn.addEventListener('click', verifyOTP);
 
         continueBtn.addEventListener('click', function() {
-            window.location.href = 'index.html';
+            window.location.href = 'success.html';
         });
 
         retryBtn.addEventListener('click', function() {
